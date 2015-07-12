@@ -3,7 +3,7 @@
 CPU-16 is a fake 16 bit processor written as part of my desire to better learn assembly language, CPU design, and VM design.
 Since CPU-16 is not a real architecture I was able to make the instruction set as simple to learn as possible.
 A RISC load/store architecture is followed, so allowing memory to be accessed only via specific instructions.
-This processor also follows a Von-Neumann architecture; with program instructions occupying the same memory as the working data of a program.
+This processor also follows a Von-Neumann architecture; with program instructions occupy the same memory as the working data of a program.
 
 ## status
 
@@ -72,29 +72,53 @@ At power-on the program counter is set to the address written placed in the rese
 
 ## Assembly directives
 
-*operand types:
-** #xxxx           - hex literal
-** %name           - symbolic address
+* Operand types:
+  * A symbolic address can be either a function name or a label.
+```
+#xxxx           - hexidecimal literal
+%name           - symbolic address
+```
 
-*symbolic address:
-** FUNCTION name   - declare function 'name'
-** .label          - mark address with label
-** END             - mark end of function
+* Symbolic address:
+  * Functions will impose their scope on any labels declared within them.
+```
+FUNCTION name   - declare function 'name'
+.label          - mark address with label
+END             - mark end of function
+```
 
-*address control:
-** AT #1234        - set assembler output address
+* Address control:
+  * All following output will follow from address #XXXX.
+```
+AT #XXXX        - set assembler output address
+```
 
-*encode data:
-** DATA #ff        - output byte 0xff
-** DATA $HELLO     - output ascii string 'HELLO'
-** DATA %label     - output address of label
+* Encode data:
+  * String data is not zero terminated and may not contain spaces
+  * Spaces must be encoded as the ascii #20 char
+  * Data can contain many types on one line
+```
+DATA #ff        - output byte 0xff
+DATA $HELLO     - output ascii string 'HELLO'
+DATA %label     - output address of label
+DATA $HI #20 #1234
+```
 
 ## Instructions
 
-Instruction Format: 0xCCXY, [0xIIII]
+* Instruction format
+  * Instructions are either 16bits in size or 32bits if it has an immediate value.
+  * The CC byte encodes the specific opcode to execute.
+  * RX and RY are specified in the XY register byte of the instruction.
+  * IMM is a little endian 16 bit immediate value following the instruction.
+```
+0xCCXY, [0xIIII]
+```
 
-Instructions are either 16bits in size or 32bits if it has an immediate value.
-
+* Instruction map
+  * <opcode>.W denotes a memory operation for WORD values.
+  * <opcode>.B denotes a memory operatore for BYTE values.
+  * <opcode>+ denotes that the address register will be incremented by the data size after execution.
 ```
 | 0xCC   | 0x0_             | 0x1_           | 0x2_      | 0x3_       | 0x4_    | 0x5_          | 0x6_   | 0x7_     | 0x8_   |
 | ------ | ---------------- | -------------- | --------- | ---------- | ------- | ------------- | ------ | -------- | ------ |
@@ -111,7 +135,5 @@ Instructions are either 16bits in size or 32bits if it has an immediate value.
 | 0x_A   |                  |                | MOV RX RY | MOV IMM RX |         |               |        |          |        |
 ```
 
-IMM is a 16 bit immediate value following the instruction
-RX and RY are specified in the (X,Y) register field of the instruction
 
 
