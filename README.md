@@ -1,18 +1,20 @@
 # CPU-16
+## Description
 
 CPU-16 is a fake 16 bit processor written as part of my desire to better learn assembly language, CPU design, and VM design.
 Since CPU-16 is not a real architecture I was able to make the instruction set as simple to learn as possible.
 A RISC load/store architecture is followed, so allowing memory to be accessed only via specific instructions.
 This processor also follows a Von-Neumann architecture; with program instructions occupy the same memory as the working data of a program.
 
-## status
+## Status
 
 * An assembler has been written in python
 * An very (very) crude emulator has been written in c++
 * Serial out byte at address 0x8000 writes to the console
 
-## todo
+## Todo
 
+* Loads of scope to improve the emulator
 * Emulator doesn't currently calculate arithmetic overflow
 * Interrupts not implemented
 * Only tested with hello world example
