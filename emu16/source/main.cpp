@@ -20,8 +20,9 @@ int main(int argc, const char ** args) {
         nullptr,
         nullptr,
         serial_write_8,
+        nullptr
     };
-    cpu16_add_peripheral(cpu, &bus, 0x20, 0x20);
+    cpu16_add_peripheral(cpu, &bus, 32, 32);
 
     if (!cpu16_load_image(cpu, args[1])) {
         printf("failed to load image\n");

@@ -9,13 +9,13 @@ This processor also follows a Von-Neumann architecture; with program instruction
 ## Status
 
 * An assembler has been written in python
-* An very (very) crude emulator has been written in c++
-* Serial out byte at address 0x8000 writes to the console
+* The emulator is still very much a work in progress
+* A address/data bus abstraction has been added to the emulator
+* Bytes written to 0x8000 to 0x8400 will be output to the console (crappy serial)
 
 ## Todo
 
 * Loads of scope to improve the emulator
-* Emulator doesn't currently calculate arithmetic overflow
 * Interrupts not implemented
 * Only tested with hello world example
 * More interrupt vectors can be implemented
@@ -57,24 +57,22 @@ Since CPU-16 has a 16bit address bus, 0xffff is the highest location that can be
 words are stored in memory as little endian.
 
 ```
-0x0000
-...         - general SRAM
-0xfffd
-0xfffe      - reset vector
-
-0x8000      - Serial out port
+{ 0x0000 .. 0x7fff }  - SRAM
+{ 0x8000 .. 0x83ff }  - serial interface
+{ 0x8400 .. 0xfffd }  - SRAM
+{ 0xfffe }            - reset vector
 ```
 
 ## Power on
 
-At power-on the program counter is set to the address written placed in the reset vector 0xFFFE
+At power-on the program counter is set to the address of the reset vector; 0xFFFE.
 
 ## Assembly directives
 
 * Operand types:
   * A symbolic address can be either a function name or a label.
 ```
-#xxxx           - hexidecimal literal
+#xxxx           - hexadecimal literal
 %name           - symbolic address
 ```
 
@@ -116,7 +114,7 @@ DATA $HI #20 #1234
 
 * Instruction map
   * <opcode>.W denotes a memory operation for WORD values.
-  * <opcode>.B denotes a memory operatore for BYTE values.
+  * <opcode>.B denotes a memory operator for BYTE values.
   * <opcode>+ denotes that the address register will be incremented by the data size after execution.
 
 ```
