@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
 
 enum {
     IR_DIV_ZERO = 0,        // divide by zero
@@ -33,30 +34,66 @@ struct cpu16_t {
         bool interrupt_;
     }
     flags_;
+
+    // the bus is split into 1k chunks
+    cpu16_bus_t bus_[64];
 };
 
 static inline
 void write8(cpu16_t & cpu, uint16_t addr, uint16_t val) {
-    // serial out port
-    if (addr == 0x8000)
-        putchar(val & 0xff);
-    cpu.mem_[addr] = val & 0xff;
+
+    uint16_t page = (addr >> 10) & 0x3f;
+    cpu16_bus_t & bus = cpu.bus_[page];
+
+    if (bus.write8) {
+        bus.write8 (&cpu, addr, uint8_t(val), bus.user_);
+    }
+    else {
+        cpu.mem_[addr] = val & 0xff;
+    }
 }
 
 static inline
 void write16(cpu16_t & cpu, uint16_t addr, uint16_t val) {
-    cpu.mem_[addr+0] = val & 0xff;
-    cpu.mem_[addr+1] = val >> 8;
+
+    uint16_t page = (addr >> 10) & 0x3f;
+    cpu16_bus_t & bus = cpu.bus_[page];
+
+    if (bus.write16) {
+        bus.write16 (&cpu, addr, val, bus.user_);
+    }
+    else {
+        cpu.mem_[addr+0] = val & 0xff;
+        cpu.mem_[addr+1] = val >> 8;
+    }
 }
 
 static inline
 uint16_t read8(cpu16_t & cpu, uint16_t addr) {
-    return cpu.mem_[addr];
+
+    uint16_t page = (addr >> 10) & 0x3f;
+    cpu16_bus_t & bus = cpu.bus_[page];
+
+    if (bus.read8) {
+        return bus.read8 (&cpu, addr, bus.user_);
+    }
+    else {
+        return cpu.mem_[addr];
+    }
 }
 
 static inline
 uint16_t read16(cpu16_t & cpu, uint16_t addr) {
-    return cpu.mem_[addr] | (cpu.mem_[addr+1] << 8);
+
+    uint16_t page = (addr >> 10) & 0x3f;
+    cpu16_bus_t & bus = cpu.bus_[page];
+
+    if (bus.read16) {
+        return bus.read16 (&cpu, addr, bus.user_);
+    }
+    else {
+        return cpu.mem_[addr] | (cpu.mem_[addr+1] << 8);
+    }
 }
 
 static inline
@@ -147,6 +184,8 @@ void alu_mulh(cpu16_t & cpu, uint16_t & reg, uint16_t operand) {
 
 extern
 void cpu16_run(cpu16_t * cpu_, int32_t count) {
+    assert (cpu_);
+    assert (count > 0);
 
     cpu16_t & cpu = *cpu_;
 
@@ -410,14 +449,6 @@ void cpu16_run(cpu16_t * cpu_, int32_t count) {
 
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
-#if 0
-        case (0x60) : // JRO RX
-            // NOT NEEDED SINCE WE CAN 'add #8 pc'
-            break;
-#endif
-
-// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-
         case (0x70) : // CALL IMM
             push16(cpu, pc + 4);
             pc = imm;
@@ -447,13 +478,14 @@ void cpu16_run(cpu16_t * cpu_, int32_t count) {
         default:
             // unknown opcode
             raise (cpu, IR_BADINST);
-            return;
         }
     } // while
 }
 
 extern
 bool cpu16_load_image(cpu16_t * cpu_, const char * path) {
+    assert (cpu_);
+    assert (path);
     cpu16_t & cpu = *cpu_;
     FILE * fp = nullptr;
     fopen_s(&fp, path, "rb");
@@ -468,17 +500,38 @@ bool cpu16_load_image(cpu16_t * cpu_, const char * path) {
 extern
 cpu16_t * cpu16_new () {
     cpu16_t * cpu = new cpu16_t ();
+    assert (cpu);
     memset (cpu, 0, sizeof (cpu16_t));
     return cpu;
 }
 
 extern
-void cpu16_free (cpu16_t * arg) {
-    delete arg;
+void cpu16_free (cpu16_t * cpu) {
+    assert (cpu);
+    delete cpu;
 }
 
 extern
 void cpu16_reset (cpu16_t * cpu) {
+    assert (cpu);
     memset (cpu->reg_, 0, sizeof(cpu->reg_));
     cpu->reg_[REG_PC] = VEC_RESET;
+}
+
+extern
+void cpu16_add_peripheral(
+    cpu16_t *cpu, 
+    cpu16_bus_t * bus, 
+    uint16_t page_start,
+    uint16_t page_end)
+{
+    assert (page_end < 64);
+    assert (page_start <= page_end);
+    assert (cpu);
+
+    for (uint32_t p = page_start; p <= page_end; p++) {
+        cpu16_bus_t & page = cpu->bus_[p];
+        if (bus) page = *bus;
+        else     memset (&page, 0, sizeof (cpu16_bus_t));
+    }
 }
