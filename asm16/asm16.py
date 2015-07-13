@@ -23,7 +23,13 @@ def read_literal(state, value):
 def read_register(state, value):
     assert type(value) is str
     assert len(value) > 1
-    if value[0] == 'R' or value[0] == 'r':
+    if value == 'ZR':
+        return 0
+    if value == 'PC':
+        return 1
+    if value == 'SP':
+        return 2
+    if value[0] == 'R':
         return int(value[1:])
     return None
 
@@ -36,7 +42,7 @@ def emit_instruction(state, prototypes, operands):
         # check there are enough operands
         if len(proto[0]) > len(operands):
             continue
-        #
+        # clear all instruction fields
         inst.clear()
         # try to match each field in prototype
         fail = False
@@ -97,9 +103,6 @@ map_LOAD = {
     'LOAD.W+': {('YX', '\x02')},
     'LOAD.B+': {('YX', '\x03')},
     }
-def handle_LOAD(state, operands):
-    assert operands[0] in map_LOAD
-    emit_instruction(state, map_LOAD[operands[0]], operands[1:])
 
 map_STORE = {
     'STORE.W':  {('YX', '\x04'), ('XI', '\x14')},
@@ -107,23 +110,40 @@ map_STORE = {
     'STORE.W+': {('YX', '\x06')},
     'STORE.B+': {('YX', '\x07')},
     }
+
+map_ALU = {
+    'ADD':  {('YX', '\x20'), ('IX', '\x30')},
+    'MUL':  {('YX', '\x21'), ('IX', '\x31')},
+    'SHL':  {('YX', '\x22'), ('IX', '\x32')},
+    'SHR':  {('YX', '\x23'), ('IX', '\x33')},
+    'SUB':  {('YX', '\x24'), ('IX', '\x34')},
+    'DIV':  {('YX', '\x25'), ('IX', '\x35')},
+    'MOD':  {('YX', '\x26'), ('IX', '\x36')},
+    'AND':  {('YX', '\x27'), ('IX', '\x37')},
+    'OR':   {('YX', '\x28'), ('IX', '\x38')},
+    'XOR':  {('YX', '\x29'), ('IX', '\x39')},
+    'MOV':  {('YX', '\x2A'), ('IX', '\x3A')},
+    'MULH': {('YX', '\x2B'), ('IX', '\x3B')},
+    }
+
+map_JMP_COND = {
+    'JNE': {('YXI', '\x51')},
+    'JEQ': {('YXI', '\x52')},
+    'JL':  {('YXI', '\x53')},
+    'JG':  {('YXI', '\x54')},
+    'JLE': {('YXI', '\x55')},
+    'JGE': {('YXI', '\x56')},
+    }
+
+def handle_LOAD(state, operands):
+    assert operands[0] in map_LOAD
+    emit_instruction(state, map_LOAD[operands[0]], operands[1:])
+
+
 def handle_STORE(state, operands):
     assert operands[0] in map_STORE
     emit_instruction(state, map_STORE[operands[0]], operands[1:])
 
-map_ALU = {
-    'ADD': {('YX', '\x20'), ('IX', '\x30')},
-    'MUL': {('YX', '\x21'), ('IX', '\x31')},
-    'SHL': {('YX', '\x22'), ('IX', '\x32')},
-    'SHR': {('YX', '\x23'), ('IX', '\x33')},
-    'SUB': {('YX', '\x24'), ('IX', '\x34')},
-    'DIV': {('YX', '\x25'), ('IX', '\x35')},
-    'MOD': {('YX', '\x26'), ('IX', '\x36')},
-    'AND': {('YX', '\x27'), ('IX', '\x37')},
-    'OR':  {('YX', '\x28'), ('IX', '\x38')},
-    'XOR': {('YX', '\x29'), ('IX', '\x39')},
-    'MOV': {('YX', '\x2A'), ('IX', '\x3A')},
-    }
 def handle_ALU(state, operands):
     assert operands[0] in map_ALU
     emit_instruction(state, map_ALU[operands[0]], operands[1:])
@@ -140,22 +160,9 @@ def handle_JMP(state, operands):
     proto = {('I', '\x50')}
     emit_instruction(state, proto, operands[1:])
 
-map_JMP_COND = {
-    'JNE': {('YXI', '\x51')},
-    'JEQ': {('YXI', '\x52')},
-    'JL':  {('YXI', '\x53')},
-    'JG':  {('YXI', '\x54')},
-    'JLE': {('YXI', '\x55')},
-    'JGE': {('YXI', '\x56')},
-    }
 def handle_JMP_COND(state, operands):
     assert operands[0] in map_JMP_COND
     emit_instruction(state, map_JMP_COND[operands[0]], operands[1:])
-
-# [PC += (RX << 1) - 0x8000]
-def handle_JRO(state, operands):
-    proto = {('X', '\x60')}
-    emit_instruction(state, proto, operands[1:])
 
 def handle_CALL(state, operands):
     proto = {('I', '\x70')}
@@ -277,8 +284,6 @@ g_map = {
     'JG':       handle_JMP_COND,
     'JLE':      handle_JMP_COND,
     'JGE':      handle_JMP_COND,
-
-    'JRO':      handle_JRO,
 
     'CALL':     handle_CALL,
     'RETI':     handle_RETI,

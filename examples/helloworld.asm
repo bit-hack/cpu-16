@@ -6,7 +6,7 @@ function main
 .loop
     - load next character
     load.b+ r4 r5
-    jeq r0 r5 %end
+    jeq zr r5 %end
     - write to serial out
     store.b r5 #8000
     - if not a end of string
@@ -18,5 +18,5 @@ end
 .s1
 data $HELLO #20 $WORLD #00
 
-at #fffe
-data %main
+at #fffc
+jmp %main
