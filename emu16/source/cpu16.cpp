@@ -165,7 +165,7 @@ void alu_and(cpu16_t & cpu, uint16_t & reg, uint16_t operand) {
 
 static inline
 void alu_or(cpu16_t & cpu, uint16_t & reg, uint16_t operand) {
-    reg &= operand;
+    reg |= operand;
 }
 static inline
 void alu_xor(cpu16_t & cpu, uint16_t & reg, uint16_t operand) {
