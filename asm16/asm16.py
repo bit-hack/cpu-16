@@ -124,7 +124,7 @@ map_ALU = {
     'OR':   {('YX', '\x28'), ('IX', '\x38')},
     'XOR':  {('YX', '\x29'), ('IX', '\x39')},
     'MOV':  {('YX', '\x2A'), ('IX', '\x3A')},
-    'MULH': {('YX', '\x2B'), ('IX', '\x3B')},
+    'MLH':  {('YX', '\x2B'), ('IX', '\x3B')},
     }
 
 map_JMP_COND = {
@@ -274,6 +274,7 @@ g_map = {
     'OR':       handle_ALU,
     'XOR':      handle_ALU,
     'MOV':      handle_ALU,
+    'MLH':      handle_ALU,
 
     'PUSH':     handle_PUSH,
     'POP':      handle_POP,

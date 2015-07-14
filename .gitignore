@@ -1,3 +1,4 @@
 build
 *.pyc
-asm/.idea
+.idea
+emu16/libs

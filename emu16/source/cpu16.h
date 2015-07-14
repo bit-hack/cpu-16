@@ -63,3 +63,7 @@ void cpu16_add_peripheral(
     cpu16_bus_t * bus, 
     uint16_t page_start,
     uint16_t page_end);
+
+// read a byte from CPU16 memory
+extern
+uint8_t cpu16_read_byte(cpu16_t *cpu, uint16_t addr);

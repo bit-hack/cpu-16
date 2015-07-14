@@ -506,13 +506,13 @@ cpu16_t * cpu16_new () {
 }
 
 extern
-void cpu16_free (cpu16_t * cpu) {
+void cpu16_free(cpu16_t * cpu) {
     assert (cpu);
     delete cpu;
 }
 
 extern
-void cpu16_reset (cpu16_t * cpu) {
+void cpu16_reset(cpu16_t * cpu) {
     assert (cpu);
     memset (cpu->reg_, 0, sizeof(cpu->reg_));
     cpu->reg_[REG_PC] = VEC_RESET;
@@ -534,4 +534,9 @@ void cpu16_add_peripheral(
         if (bus) page = *bus;
         else     memset (&page, 0, sizeof (cpu16_bus_t));
     }
+}
+
+extern
+uint8_t cpu16_read_byte(cpu16_t *cpu, uint16_t addr) {
+    return cpu->mem_[addr];
 }
