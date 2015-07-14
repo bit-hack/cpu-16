@@ -1,12 +1,13 @@
--- 16 bit Linear Feedback Shift Register for CPU16
+-- CPU16, Linear Feedback Shift Register example
 
-AT #0
+at #0
 .seed
 DATA #ffff
 
+at #20
 function rand
     - load seed
-    load.w %seed r3
+    ldw     %seed r3
     - bit 11
     mov     r3    r4
     shr     #A    r4
@@ -31,21 +32,24 @@ function rand
     shl     #1    r3
     or      r9    r3
     - store seed
-    store.w r3 %seed
+    stw     r3 %seed
     - return
     ret
 end
 
+at #80
 function main
-    - r3 = rand
-    mov     #ff   r3
+    - zero index
+    mov     ZR    r5
+    - setup stack
+    mov     #a000 SP
 .loop
     - get a random number in r3
     call %rand
     - store in framebuffer
     mov     r5    r7
     add     #4000 r7
-    store.b r3    r7
+    stb     r3    r7
     - increment and wrap i
     add     #1    r5
     and     #0fff r5

@@ -5,10 +5,10 @@ function main
     mov %s1 r4
 .loop
     - load next character
-    load.b+ r4 r5
+    ldb+ r4 r5
     jeq zr r5 %end
     - write to serial out
-    store.b r5 #8000
+    stb r5 #8000
     - if not a end of string
     jmp %loop
 .end

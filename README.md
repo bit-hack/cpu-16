@@ -113,37 +113,45 @@ DATA $HI #20 #1234
 ```
 
 * Instruction map
-  * <opcode>.W denotes a memory operation for WORD values.
-  * <opcode>.B denotes a memory operator for BYTE values.
-  * <opcode>+ denotes that the address register will be incremented by the data size after execution.
+  * <LD/ST>W denotes a memory operation for WORD values.
+  * <LD/ST>B denotes a memory operator for BYTE values.
+  * <LDx/STx>+ denotes that the address register will be incremented by the data size after execution.
 
 ```
-| 0xCC   | 0x0_             | 0x1_           | 0x2_      | 0x3_       | 0x4_    | 0x5_          | 0x7_     | 0x8_   |
-| ------ | ---------------- | -------------- | --------- | ---------- | ------- | ------------- | -------- | ------ |
-| 0x_0   | LOAD.W   RY  RX  | LOAD.W IMM RX  | ADD RX RY | ADD IMM RX | PUSH RX | JMP       IMM | CALL IMM | RETI   |
-| 0x_1   | LOAD.B   RY  RX  | LOAD.B IMM RX  | MUL RX RY | MUL IMM RX | POP  RX | JNE RX RY IMM | INT  IMM | CLI    |
-| 0x_2   | LOAD.W+  RY  RX  |                | SHL RX RY | SHL IMM RX |         | JEQ RX RY IMM |          | STI    |
-| 0x_3   | LOAD.B+  RY  RX  |                | SHR RX RY | SHR IMM RX |         | JL  RX RY IMM |          |        |
-| 0x_4   | STORE.W  RY  RX  | STORE.W RX IMM | SUB RX RY | SUB IMM RX |         | JG  RX RY IMM |          |        |
-| 0x_5   | STORE.B  RY  RX  | STORE.B RX IMM | DIV RX RY | DIV IMM RX |         | JLE RX RY IMM |          |        |
-| 0x_6   | STORE.W+ RY  RX  |                | MOD RX RY | MOD IMM RX |         | JGE RX RY IMM |          |        |
-| 0x_7   | STORE.B+ RY  RX  |                | AND RX RY | AND IMM RX |         |               |          |        |
-| 0x_8   |                  |                | OR  RX RY | OR  IMM RX |         |               |          |        |
-| 0x_9   |                  |                | XOR RX RY | XOR IMM RX |         |               |          |        |
-| 0x_A   |                  |                | MOV RX RY | MOV IMM RX |         |               |          |        |
-| 0x_B   |                  |                | MLH RX RY | MLH IMM RX |         |               |          |        |
+| 0xCC   | 0x0_          | 0x1_        | 0x2_      | 0x3_       | 0x4_    | 0x5_          | 0x7_     | 0x8_   |
+| ------ | ------------- | ----------- | --------- | ---------- | ------- | ------------- | -------- | ------ |
+| 0x_0   | LDW   RY  RX  | LDW IMM RX  | ADD RX RY | ADD IMM RX | PUSH RX | JMP       IMM | CALL IMM | RETI   |
+| 0x_1   | LDB   RY  RX  | LDB IMM RX  | MUL RX RY | MUL IMM RX | POP  RX | JNE RX RY IMM | INT  IMM | CLI    |
+| 0x_2   | LDW+  RY  RX  |             | SHL RX RY | SHL IMM RX |         | JEQ RX RY IMM |          | STI    |
+| 0x_3   | LDB+  RY  RX  |             | SHR RX RY | SHR IMM RX |         | JL  RX RY IMM |          |        |
+| 0x_4   | STW   RY  RX  | STW RX IMM  | SUB RX RY | SUB IMM RX |         | JG  RX RY IMM |          |        |
+| 0x_5   | STB   RY  RX  | STB RX IMM  | DIV RX RY | DIV IMM RX |         | JLE RX RY IMM |          |        |
+| 0x_6   | STW+  RY  RX  |             | MOD RX RY | MOD IMM RX |         | JGE RX RY IMM |          |        |
+| 0x_7   | STB+  RY  RX  |             | AND RX RY | AND IMM RX |         |               |          |        |
+| 0x_8   |               |             | OR  RX RY | OR  IMM RX |         |               |          |        |
+| 0x_9   |               |             | XOR RX RY | XOR IMM RX |         |               |          |        |
+| 0x_A   |               |             | MOV RX RY | MOV IMM RX |         |               |          |        |
+| 0x_B   |               |             | MLH RX RY | MLH IMM RX |         |               |          |        |
 ```
 
+  * LDW  - load word
+  * LDB  - load byte
+  * LDW+ - load word and increment
+  * LDB+ - load byte and increment
+  * STW  - store word
+  * STB  - store byte
+  * STW+ - store word and increment
+  * SDB+ - store byte and increment
   * CALL - call a subroutine (PUSH PC+4)
   * INT  - raise a specific interrupt
   * MLH  - multiply, keep high word (good for fixed point)
   * RETI - return from interrupt
   * CLI  - disable interrupts
   * STI  - enable interrupts
+  * RET  - return from subroutine
 
 ## Pseudo instructions
 
-  * RET  (POP PC)
   * NOP  (MOV ZR ZR)
   * NOT  (XOR RX #FFFF)
   * SWAP (XOR RX RY, XOR RY RX, XOR RX RY)

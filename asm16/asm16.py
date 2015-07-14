@@ -99,17 +99,17 @@ def emit_instruction(state, prototypes, operands):
     raise ParseException('invalid instruction operands')
 
 map_LOAD = {
-    'LOAD.W':  {('YX', '\x00'), ('IX', '\x10')},
-    'LOAD.B':  {('YX', '\x01'), ('IX', '\x11')},
-    'LOAD.W+': {('YX', '\x02')},
-    'LOAD.B+': {('YX', '\x03')},
+    'LDW':  {('YX', '\x00'), ('IX', '\x10')},
+    'LDB':  {('YX', '\x01'), ('IX', '\x11')},
+    'LDW+': {('YX', '\x02')},
+    'LDB+': {('YX', '\x03')},
     }
 
 map_STORE = {
-    'STORE.W':  {('YX', '\x04'), ('XI', '\x14')},
-    'STORE.B':  {('YX', '\x05'), ('XI', '\x15')},
-    'STORE.W+': {('YX', '\x06')},
-    'STORE.B+': {('YX', '\x07')},
+    'STW':  {('YX', '\x04'), ('XI', '\x14')},
+    'STB':  {('YX', '\x05'), ('XI', '\x15')},
+    'STW+': {('YX', '\x06')},
+    'STB+': {('YX', '\x07')},
     }
 
 map_ALU = {
@@ -185,6 +185,10 @@ def handle_STI(state, operands):
     proto = {('', '\x82')}
     emit_instruction(state, proto, operands[1:])
 
+def handle_RET(state, operands):
+    proto = {('', '\x83')}
+    emit_instruction(state, proto, operands[1:])
+
 def handle_NOP(state, operands):
     handle_ALU(state, ['MOV', 'R0', 'R0'])
 
@@ -200,10 +204,6 @@ def handle_SWAP(state, operands):
     handle_ALU(state, ['XOR', rx, ry])
     handle_ALU(state, ['XOR', ry, rx])
     handle_ALU(state, ['XOR', rx, ry])
-
-def handle_RET(state, operands):
-    handle_POP(state, ['POP', 'R1'])
-    pass
 
 def handle_FUNCTION(state, operands):
     state.scope_.add_symbol(operands[1], state.image_.get_head(), state.line_)
@@ -254,14 +254,14 @@ def handle_AT(state, operands):
     state.image_.set_head(val)
 
 g_map = {
-    'LOAD.W':   handle_LOAD,
-    'LOAD.B':   handle_LOAD,
-    'LOAD.W+':  handle_LOAD,
-    'LOAD.B+':  handle_LOAD,
-    'STORE.W':  handle_STORE,
-    'STORE.B':  handle_STORE,
-    'STORE.W+': handle_STORE,
-    'STORE.B+': handle_STORE,
+    'LDW':      handle_LOAD,
+    'LDB':      handle_LOAD,
+    'LDW+':     handle_LOAD,
+    'LDB+':     handle_LOAD,
+    'STW':      handle_STORE,
+    'STB':      handle_STORE,
+    'STW+':     handle_STORE,
+    'STB+':     handle_STORE,
 
     'ADD':      handle_ALU,
     'MUL':      handle_ALU,

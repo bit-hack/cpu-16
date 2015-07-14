@@ -98,14 +98,15 @@ uint16_t read16(cpu16_t & cpu, uint16_t addr) {
 
 static inline
 void push16(cpu16_t & cpu, uint16_t val) {
-    write16(cpu, cpu.reg_[REG_SP], val);
     cpu.reg_[REG_SP] -= 2;
+    write16(cpu, cpu.reg_[REG_SP], val);
 }
 
 static inline
 uint16_t pop16(cpu16_t & cpu) {
+    uint16_t v = read16(cpu, cpu.reg_[REG_SP]);
     cpu.reg_[REG_SP] += 2;
-    return read16(cpu, cpu.reg_[REG_SP]);
+    return v;
 }
 
 static inline
@@ -470,6 +471,10 @@ void cpu16_run(cpu16_t * cpu_, int32_t count) {
 
         case (0x82) : // RETI (return from interrupts)
             cpu.flags_.interrupt_ = true;
+            pc = pop16 (cpu);
+            break;
+
+        case (0x83) : // RET (return)
             pc = pop16 (cpu);
             break;
 
