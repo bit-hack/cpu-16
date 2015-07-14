@@ -43,6 +43,7 @@ bool app_init(state_t * state, const char * path) {
     }
     cpu16_reset(state->cpu_);
 
+    SDL_WM_SetCaption("CPU-16", nullptr);
     state->screen_ = SDL_SetVideoMode(256, 256, 32, 0);
     if (!state->screen_)
         return false;
