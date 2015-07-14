@@ -202,7 +202,7 @@ def handle_SWAP(state, operands):
     handle_ALU(state, ['XOR', rx, ry])
 
 def handle_RET(state, operands):
-    handle_ALU(state, ['POP', 'R1'])
+    handle_POP(state, ['POP', 'R1'])
     pass
 
 def handle_FUNCTION(state, operands):
