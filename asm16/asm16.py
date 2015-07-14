@@ -44,6 +44,7 @@ def emit_instruction(state, prototypes, operands):
             continue
         # clear all instruction fields
         inst.clear()
+        op_ix = 0
         # try to match each field in prototype
         fail = False
         for field in proto[0]:
