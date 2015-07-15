@@ -194,7 +194,7 @@ void cpu16_run(cpu16_t * cpu_, int32_t count) {
     uint16_t & pc = cpu.reg_[REG_PC];
     uint16_t & sp = cpu.reg_[REG_SP];
 
-    while (--count > 0) {
+    while (count-- > 0) {
 
         zr = 0; // clear zero register
 
@@ -543,5 +543,18 @@ void cpu16_add_peripheral(
 
 extern
 uint8_t cpu16_read_byte(cpu16_t *cpu, uint16_t addr) {
+    assert(cpu);
     return cpu->mem_[addr];
+}
+
+extern
+uint16_t cpu16_get_register(cpu16_t *cpu, uint32_t index) {
+    assert(cpu);
+    return cpu->reg_[index & 0xf];
+}
+
+extern
+uint8_t * cpu16_get_memory(cpu16_t *cpu) {
+    assert(cpu);
+    return cpu->mem_;
 }

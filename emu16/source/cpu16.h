@@ -67,3 +67,11 @@ void cpu16_add_peripheral(
 // read a byte from CPU16 memory
 extern
 uint8_t cpu16_read_byte(cpu16_t *cpu, uint16_t addr);
+
+// access the memory space
+extern
+uint8_t * cpu16_get_memory(cpu16_t *cpu);
+
+// read a register from CPU16
+extern
+uint16_t cpu16_get_register(cpu16_t *cpu, uint32_t index);
