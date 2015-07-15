@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdio.h>
+#include <assert.h>
 
 #define _SDL_main_h
 #include <SDL.h>
@@ -15,7 +16,7 @@ struct state_t {
 };
 
 static
-void serial_write_8(cpu16_t *, uint16_t addr, uint8_t val, void * user) {
+void serial_write_8(cpu16_t *, uint16_t addr, uint8_t val, cpu16_device_t * user) {
 
     putchar(val);
 }
@@ -32,14 +33,12 @@ bool app_init(state_t * state, const char * path) {
     if (!state->cpu_)
         return false;
 
-    cpu16_bus_t bus = {
-        nullptr,
-        nullptr,
-        nullptr,
-        serial_write_8,
-        nullptr
-    };
-    cpu16_add_peripheral(state->cpu_, &bus, 32, 32);
+    cpu16_device_t * serial = new cpu16_device_t;
+    assert (serial);
+    memset (serial, 0, sizeof (cpu16_device_t));
+    serial->cycles_till_preempt_ = 0xffff;
+    serial->write_byte_ = serial_write_8;
+    cpu16_add_device(state->cpu_, serial, 32, 32);
 
     if (!cpu16_load_image(state->cpu_, path)) {
         printf("failed to load image\n");

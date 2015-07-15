@@ -189,6 +189,10 @@ def handle_RET(state, operands):
     proto = {('', '\x83')}
     emit_instruction(state, proto, operands[1:])
 
+def handle_BRK(state, operands):
+    proto = {('', '\x84')}
+    emit_instruction(state, proto, operands[1:])
+    
 def handle_NOP(state, operands):
     handle_ALU(state, ['MOV', 'R0', 'R0'])
 
@@ -297,6 +301,7 @@ g_map = {
     'NOT':      handle_NOT,
     'SWAP':     handle_SWAP,
     'RET':      handle_RET,
+    'BRK':      handle_BRK,
 
     'FUNCTION': handle_FUNCTION,
     'END':      handle_END,

@@ -9,29 +9,25 @@
 
 struct cpu16_t;
 
-struct cpu16_bus_t {
+struct cpu16_device_t {
 
-    uint16_t (*read16)(
-        cpu16_t *, 
-        uint16_t addr, 
-        void * user);
+    uint32_t cycles_till_preempt_;
 
-    uint8_t (*read8)(
-        cpu16_t *,
-        uint16_t addr,
-        void * user);
+    typedef uint16_t (*read_word_t )(cpu16_t *, uint16_t addr, cpu16_device_t * device);
+    typedef uint8_t  (*read_byte_t )(cpu16_t *, uint16_t addr, cpu16_device_t * device);
+    read_word_t  read_word_;
+    read_byte_t  read_byte_;
 
-    void (*write16)(
-        cpu16_t *,
-        uint16_t addr,
-        uint16_t val,
-        void * user);
+    typedef void (*write_word_t)(cpu16_t *, uint16_t addr, uint16_t val, cpu16_device_t * device);
+    typedef void (*write_byte_t)(cpu16_t *, uint16_t addr, uint8_t  val, cpu16_device_t * device);
+    write_word_t write_word_;
+    write_byte_t write_byte_;
 
-    void (*write8)(
-        cpu16_t *,
-        uint16_t addr,
-        uint8_t val, 
-        void * user);
+    typedef void (*init_t)(cpu16_t *, cpu16_device_t * device);
+    init_t init_;
+
+    typedef void (*tick_t)(cpu16_t *, cpu16_device_t * device);
+    tick_t tick_;
 
     void * user_;
 };
@@ -46,7 +42,7 @@ void cpu16_free(cpu16_t *);
 
 // execute a CPU16 context for 'count' instructions
 extern
-void cpu16_run(cpu16_t * cpu, int32_t count);
+void cpu16_run(cpu16_t * cpu, uint32_t count);
 
 // load an memory image from disk into a CPU16 context
 extern
@@ -56,11 +52,11 @@ bool cpu16_load_image(cpu16_t * cpu, const char * path);
 extern
 void cpu16_reset(cpu16_t * cpu);
 
-// add a peripheral to the CPU16 address/data bus
+// add a device to the bus
 extern
-void cpu16_add_peripheral(
-    cpu16_t *cpu, 
-    cpu16_bus_t * bus, 
+void cpu16_add_device(
+    cpu16_t * cpu,
+    cpu16_device_t * device,
     uint16_t page_start,
     uint16_t page_end);
 

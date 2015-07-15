@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include <vector>
 
 enum {
     IR_DIV_ZERO = 0,        // divide by zero
@@ -36,64 +37,69 @@ struct cpu16_t {
     flags_;
 
     // the bus is split into 1k chunks
-    cpu16_bus_t bus_[64];
+    cpu16_device_t * bus_[64];
+
+    // device list
+    std::vector<cpu16_device_t*> device_;
 };
 
 static inline
 void write8(cpu16_t & cpu, uint16_t addr, uint16_t val) {
 
     uint16_t page = (addr >> 10) & 0x3f;
-    cpu16_bus_t & bus = cpu.bus_[page];
 
-    if (bus.write8) {
-        bus.write8 (&cpu, addr, uint8_t(val), bus.user_);
+    if (cpu.bus_[page]) {
+        cpu16_device_t & bus = *cpu.bus_[page];
+        if (bus.write_byte_) {
+            bus.write_byte_ (&cpu, addr, uint8_t(val), &bus);
+            return;
+        }
     }
-    else {
-        cpu.mem_[addr] = val & 0xff;
-    }
+    cpu.mem_[addr] = val & 0xff;
 }
 
 static inline
 void write16(cpu16_t & cpu, uint16_t addr, uint16_t val) {
 
     uint16_t page = (addr >> 10) & 0x3f;
-    cpu16_bus_t & bus = cpu.bus_[page];
-
-    if (bus.write16) {
-        bus.write16 (&cpu, addr, val, bus.user_);
+    
+    if (cpu.bus_[page]) {
+        cpu16_device_t& bus = *cpu.bus_[page];
+        if (bus.write_word_) {
+            bus.write_word_ (&cpu, addr, val, &bus);
+            return;
+        }
     }
-    else {
-        cpu.mem_[addr+0] = val & 0xff;
-        cpu.mem_[addr+1] = val >> 8;
-    }
+    cpu.mem_[addr+0] = val & 0xff;
+    cpu.mem_[addr+1] = val >> 8;
 }
 
 static inline
 uint16_t read8(cpu16_t & cpu, uint16_t addr) {
 
     uint16_t page = (addr >> 10) & 0x3f;
-    cpu16_bus_t & bus = cpu.bus_[page];
 
-    if (bus.read8) {
-        return bus.read8 (&cpu, addr, bus.user_);
+    if (cpu.bus_[page]) {
+        cpu16_device_t & bus = *cpu.bus_[page];
+        if (bus.read_byte_) {
+            return bus.read_byte_ (&cpu, addr, &bus);
+        }
     }
-    else {
-        return cpu.mem_[addr];
-    }
+    return cpu.mem_[addr];
 }
 
 static inline
 uint16_t read16(cpu16_t & cpu, uint16_t addr) {
 
     uint16_t page = (addr >> 10) & 0x3f;
-    cpu16_bus_t & bus = cpu.bus_[page];
 
-    if (bus.read16) {
-        return bus.read16 (&cpu, addr, bus.user_);
+    if (cpu.bus_[page]) {
+        cpu16_device_t & bus = *cpu.bus_[page];
+        if (bus.read_word_) {
+            return bus.read_word_ (&cpu, addr, &bus);
+        }
     }
-    else {
-        return cpu.mem_[addr] | (cpu.mem_[addr+1] << 8);
-    }
+    return cpu.mem_[addr] | (cpu.mem_[addr+1] << 8);
 }
 
 static inline
@@ -183,8 +189,8 @@ void alu_mulh(cpu16_t & cpu, uint16_t & reg, uint16_t operand) {
     reg = uint16_t((int32_t(int16_t(reg)) * int32_t(int16_t(operand))) >> 16);
 }
 
-extern
-void cpu16_run(cpu16_t * cpu_, int32_t count) {
+static
+int cpu16_interp(cpu16_t * cpu_, uint32_t count) {
     assert (cpu_);
     assert (count > 0);
 
@@ -194,7 +200,11 @@ void cpu16_run(cpu16_t * cpu_, int32_t count) {
     uint16_t & pc = cpu.reg_[REG_PC];
     uint16_t & sp = cpu.reg_[REG_SP];
 
-    while (count-- > 0) {
+    // number of instructions retired
+    uint32_t retired = 0;
+
+    for (; retired < count; ++retired)
+    {
 
         zr = 0; // clear zero register
 
@@ -456,7 +466,7 @@ void cpu16_run(cpu16_t * cpu_, int32_t count) {
             break;
 
         case (0x71) : // INT IMM
-            return;
+            return retired;
 
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
@@ -478,6 +488,9 @@ void cpu16_run(cpu16_t * cpu_, int32_t count) {
             pc = pop16 (cpu);
             break;
 
+        case (0x84) : // BRK (debug break)
+            return retired;
+
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
         default:
@@ -485,6 +498,36 @@ void cpu16_run(cpu16_t * cpu_, int32_t count) {
             raise (cpu, IR_BADINST);
         }
     } // while
+
+    return retired;
+}
+
+extern
+void cpu16_run (cpu16_t * cpu, uint32_t cycles) {
+    assert (cpu);
+
+    while (cycles > 0) {
+        uint32_t ticks = cycles;
+        // find max ticks till preemption
+        for ( cpu16_device_t * & device : cpu->device_ ) {
+            assert (device);
+            uint32_t & ctp = device->cycles_till_preempt_;
+            if (device->tick_) {
+                if (ctp <= 0)
+                    device->tick_ (cpu, device);
+                ticks = ticks < ctp ? ticks : ctp;
+            }
+        }
+        // try to interpret for given number of ticks
+        uint32_t retired = cpu16_interp (cpu, ticks);
+        // advance preemption by number of retired instructions
+        for ( cpu16_device_t * & device : cpu->device_ )
+            if (device->tick_)
+                device->cycles_till_preempt_ -= retired;
+        // we should never retire more then we wanted to
+        assert (retired <= cycles);
+        cycles -= retired;
+    }
 }
 
 extern
@@ -506,7 +549,9 @@ extern
 cpu16_t * cpu16_new () {
     cpu16_t * cpu = new cpu16_t ();
     assert (cpu);
-    memset (cpu, 0, sizeof (cpu16_t));
+    memset (cpu->mem_, 0, sizeof (cpu->mem_));
+    memset (cpu->reg_, 0, sizeof (cpu->reg_));
+    memset (cpu->bus_, 0, sizeof (cpu->bus_));
     return cpu;
 }
 
@@ -521,12 +566,18 @@ void cpu16_reset(cpu16_t * cpu) {
     assert (cpu);
     memset (cpu->reg_, 0, sizeof(cpu->reg_));
     cpu->reg_[REG_PC] = VEC_RESET;
+
+    // init all devices attached
+    for (cpu16_device_t * & device : cpu->device_) {
+        if (device->init_)
+            device->init_ (cpu, device);
+    }
 }
 
 extern
-void cpu16_add_peripheral(
+void cpu16_add_device(
     cpu16_t *cpu, 
-    cpu16_bus_t * bus, 
+    cpu16_device_t * device, 
     uint16_t page_start,
     uint16_t page_end)
 {
@@ -535,10 +586,12 @@ void cpu16_add_peripheral(
     assert (cpu);
 
     for (uint32_t p = page_start; p <= page_end; p++) {
-        cpu16_bus_t & page = cpu->bus_[p];
-        if (bus) page = *bus;
-        else     memset (&page, 0, sizeof (cpu16_bus_t));
+        cpu16_device_t * & page = cpu->bus_[p];
+        if (device) page = device;
+        else        page = nullptr;
     }
+
+    cpu->device_.push_back (device);
 }
 
 extern
