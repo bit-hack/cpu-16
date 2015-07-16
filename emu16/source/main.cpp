@@ -5,15 +5,8 @@
 #define _SDL_main_h
 #include <SDL.h>
 
-#include "console.h"
-#include "cpu16.h"
-
-struct state_t {
-
-    console_t * console_;
-    cpu16_t * cpu_;
-    SDL_Surface * screen_;
-};
+#include "main.h"
+#include "ui.h"
 
 static
 void serial_write_8(cpu16_t *, uint16_t addr, uint8_t val, cpu16_device_t * user) {
@@ -97,100 +90,20 @@ void draw_console(state_t * state) {
     }
 }
 
-void write_word(console_t * con, uint16_t w) {
-
-    for (uint32_t i = 0; i < 4; ++i) {
-        uint16_t n = (w >> 12) & 0xf;
-        char h = '0' + n;
-        if (n >= 10) h = 'a' + n - 10;
-        con_putc(con, h);
-        w <<= 4;
-    }
-}
-
-void write_byte(console_t * con, uint8_t b) {
-
-    uint8_t hi = b >> 4;
-    if (hi >= 10) con_putc(con, 'a' + (hi - 10));
-    else con_putc(con, '0' + hi);
-
-    uint8_t lo = b & 0xf;
-    if (lo >= 10) con_putc(con, 'a' + (lo - 10));
-    else con_putc(con, '0' + lo);
-}
-
-static
-void draw_registers(state_t * state) {
-
-    console_t * con = state->console_;
-    cpu16_t * cpu = state->cpu_;
-
-    static
-    const char * reg[] = {
-        "ZR", "PC", "SP", "R3",
-        "R4", "R5", "R6", "R7",
-        "R8", "R9", "R10", "R11",
-        "R12", "R13", "R14", "R15",
-    };
-
-    for (int i = 0; i < 16; ++i) {
-
-        con_set_caret(con, 0, i);
-        con_puts(con, reg[i], 3);
-        con_set_caret(con, 5, -1);
-        write_word(con, cpu16_get_register(state->cpu_, i));
-    }
-}
-
-static
-void draw_memory(state_t * state) {
-
-    console_t * con = state->console_;
-    cpu16_t * cpu = state->cpu_;
-
-    uint16_t mem = 0;
-    for (int y = 0; y < 8; y++) {
-        con_set_caret(con, 0, 17 + y);
-        for (int x = 0; x < 16; x++) {
-            uint8_t byte = cpu16_read_byte(cpu, mem + x);
-            write_byte(con, byte);
-            con_putc(con, ' ');
-        }
-        for (int x = 0; x < 16; x++) {
-            uint8_t byte = cpu16_read_byte(cpu, mem + x);
-            con_putc(con, byte);
-        }
-        mem += 16;
-    }
-}
-
 static
 void draw_framebuffer(state_t * state) {
-
     const uint32_t width = state->screen_->w;
     const uint32_t height = state->screen_->w;
-
     uint32_t * py = (uint32_t*)state->screen_->pixels;
-
     uint8_t * mem = cpu16_get_memory(state->cpu_);
     mem += 0x4000;
-
     py += 16 + width * 16;
-
     for (uint32_t y = 0; y < 64; y++) {
-
         uint32_t * px = py;
-
-        for (uint32_t x = 0; x < 64; x++) {
-
+        for (uint32_t x = 0; x < 64; ++x, ++px, ++mem) {
             uint8_t c = *mem;
-
             *px = (c<<16) | (c<<8) | c;
-
-            px++;
-            mem++;
         }
-
         py += width;
     }
 }
@@ -203,8 +116,10 @@ void draw_state(state_t * state) {
 
     con_fill(con, nullptr, ' ');
 
-    draw_registers(state);
-    draw_memory(state);
+    ui_draw_reg(state);
+    ui_draw_mem(state);
+    ui_draw_dis(state);
+
     draw_console(state);
     draw_framebuffer(state);
 }
@@ -216,20 +131,13 @@ bool app_tick(state_t * state) {
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_QUIT)
             return false;
-        if (event.type == SDL_KEYDOWN)
+        if (event.type == SDL_KEYDOWN) {
             if (event.key.keysym.sym == SDLK_ESCAPE)
                 return false;
+            if (event.key.keysym.sym == SDLK_F11)
+                cpu16_run(state->cpu_, 1);
+        }
     }
-
-#if 0
-    for (uint32_t i = 0; i < (64 * 64); ++i) {
-        uint32_t x = i % 64;
-        uint32_t y = i / 64;
-        uint8_t pix = cpu16_read_byte(state->cpu_, 0x4000 + i);
-        SDL_Rect rect = { x*4, y*4, 4, 4 };
-        SDL_FillRect(state->screen_, &rect, (pix << 16) | (pix << 8) | pix);
-    }
-#endif
 
     draw_state(state);
     SDL_Flip(state->screen_);
@@ -250,7 +158,8 @@ int main(int argc, const char ** args) {
     }
 
     while (app_tick(&state)) {
-        cpu16_run(state.cpu_, 4);
+        cpu16_run(state.cpu_, 1);
+//        SDL_Delay(4);
     }
 
     return 0;

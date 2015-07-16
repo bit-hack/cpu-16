@@ -109,7 +109,7 @@ DATA $HI #20 #1234
   * RX and RY are specified in the XY register byte of the instruction.
   * IMM is a little endian 16 bit immediate value following the instruction.
 ```
-0xCCXY, [0xIIII]
+0xCC 0xYX [0xIIII]
 ```
 
 * Instruction map
@@ -118,20 +118,20 @@ DATA $HI #20 #1234
   * <LDx/STx>+ denotes that the address register will be incremented by the data size after execution.
 
 ```
-| 0xCC   | 0x0_          | 0x1_        | 0x2_      | 0x3_       | 0x4_    | 0x5_          | 0x7_     | 0x8_   |
+| 0xCC   | 0x0_          | 0x1_        | 0x2_      | 0x3_       | 0x4_    | 0x5_          | 0x6_     | 0x7_   |
 | ------ | ------------- | ----------- | --------- | ---------- | ------- | ------------- | -------- | ------ |
-| 0x_0   | LDW   RY  RX  | LDW IMM RX  | ADD RX RY | ADD IMM RX | PUSH RX | JMP       IMM | CALL IMM | RETI   |
-| 0x_1   | LDB   RY  RX  | LDB IMM RX  | MUL RX RY | MUL IMM RX | POP  RX | JNE RX RY IMM | INT  IMM | CLI    |
-| 0x_2   | LDW+  RY  RX  |             | SHL RX RY | SHL IMM RX |         | JEQ RX RY IMM |          | STI    |
-| 0x_3   | LDB+  RY  RX  |             | SHR RX RY | SHR IMM RX |         | JL  RX RY IMM |          |        |
-| 0x_4   | STW   RY  RX  | STW RX IMM  | SUB RX RY | SUB IMM RX |         | JG  RX RY IMM |          |        |
-| 0x_5   | STB   RY  RX  | STB RX IMM  | DIV RX RY | DIV IMM RX |         | JLE RX RY IMM |          |        |
-| 0x_6   | STW+  RY  RX  |             | MOD RX RY | MOD IMM RX |         | JGE RX RY IMM |          |        |
-| 0x_7   | STB+  RY  RX  |             | AND RX RY | AND IMM RX |         |               |          |        |
-| 0x_8   |               |             | OR  RX RY | OR  IMM RX |         |               |          |        |
-| 0x_9   |               |             | XOR RX RY | XOR IMM RX |         |               |          |        |
-| 0x_A   |               |             | MOV RX RY | MOV IMM RX |         |               |          |        |
-| 0x_B   |               |             | MLH RX RY | MLH IMM RX |         |               |          |        |
+| 0x_0   | LDW   RY  RX  | LDW IMM RX  | ADD RY RX | ADD IMM RX | PUSH RX | JMP       IMM | CALL IMM | RETI   |
+| 0x_1   | LDB   RY  RX  | LDB IMM RX  | MUL RY RX | MUL IMM RX | POP  RX | JNE RY RX IMM | INT  IMM | CLI    |
+| 0x_2   | LDW+  RY  RX  |             | SHL RY RX | SHL IMM RX |         | JEQ RY RX IMM |          | STI    |
+| 0x_3   | LDB+  RY  RX  |             | SHR RY RX | SHR IMM RX |         | JL  RY RX IMM |          | RET    |
+| 0x_4   | STW   RY  RX  | STW RX IMM  | SUB RY RX | SUB IMM RX |         | JG  RY RX IMM |          | BRK    |
+| 0x_5   | STB   RY  RX  | STB RX IMM  | DIV RY RX | DIV IMM RX |         | JLE RY RX IMM |          |        |
+| 0x_6   | STW+  RY  RX  |             | MOD RY RX | MOD IMM RX |         | JGE RY RX IMM |          |        |
+| 0x_7   | STB+  RY  RX  |             | AND RY RX | AND IMM RX |         |               |          |        |
+| 0x_8   |               |             | OR  RY RX | OR  IMM RX |         |               |          |        |
+| 0x_9   |               |             | XOR RY RX | XOR IMM RX |         |               |          |        |
+| 0x_A   |               |             | MOV RY RX | MOV IMM RX |         |               |          |        |
+| 0x_B   |               |             | MLH RY RX | MLH IMM RX |         |               |          |        |
 ```
 
   * LDW  - load word
@@ -152,6 +152,6 @@ DATA $HI #20 #1234
 
 ## Pseudo instructions
 
-  * NOP  (MOV ZR ZR)
-  * NOT  (XOR RX #FFFF)
-  * SWAP (XOR RX RY, XOR RY RX, XOR RX RY)
+  * NOP (MOV ZR ZR)
+  * NOT (XOR RX #FFFF)
+  * SWP (XOR RX RY, XOR RY RX, XOR RX RY)

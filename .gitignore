@@ -2,3 +2,5 @@ build
 *.pyc
 .idea
 emu16/libs
+*.img
+*.bat

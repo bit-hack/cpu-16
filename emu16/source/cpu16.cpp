@@ -460,35 +460,35 @@ int cpu16_interp(cpu16_t * cpu_, uint32_t count) {
 
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
-        case (0x70) : // CALL IMM
+        case (0x60) : // CALL IMM
             push16(cpu, pc + 4);
             pc = imm;
             break;
 
-        case (0x71) : // INT IMM
+        case (0x61) : // INT IMM
             return retired;
 
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
-        case (0x80) : // STI (enable interrupts)
+        case (0x70) : // STI (enable interrupts)
             cpu.flags_.interrupt_ = true; 
             pc += 2;
             break;
 
-        case (0x81) : // CLI (disable interrupts)
+        case (0x71) : // CLI (disable interrupts)
             cpu.flags_.interrupt_ = false;
             pc += 2;
 
-        case (0x82) : // RETI (return from interrupts)
+        case (0x72) : // RETI (return from interrupts)
             cpu.flags_.interrupt_ = true;
             pc = pop16 (cpu);
             break;
 
-        case (0x83) : // RET (return)
+        case (0x73) : // RET (return)
             pc = pop16 (cpu);
             break;
 
-        case (0x84) : // BRK (debug break)
+        case (0x74) : // BRK (debug break)
             return retired;
 
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----

@@ -166,31 +166,31 @@ def handle_JMP_COND(state, operands):
     emit_instruction(state, map_JMP_COND[operands[0]], operands[1:])
 
 def handle_CALL(state, operands):
-    proto = {('I', '\x70')}
+    proto = {('I', '\x60')}
     emit_instruction(state, proto, operands[1:])
 
 def handle_INT(state, operands):
-    proto = {('I', '\x71')}
+    proto = {('I', '\x61')}
     emit_instruction(state, proto, operands[1:])
 
 def handle_RETI(state, operands):
-    proto = {('', '\x80')}
+    proto = {('', '\x70')}
     emit_instruction(state, proto, operands[1:])
 
 def handle_CLI(state, operands):
-    proto = {('', '\x81')}
+    proto = {('', '\x71')}
     emit_instruction(state, proto, operands[1:])
 
 def handle_STI(state, operands):
-    proto = {('', '\x82')}
+    proto = {('', '\x72')}
     emit_instruction(state, proto, operands[1:])
 
 def handle_RET(state, operands):
-    proto = {('', '\x83')}
+    proto = {('', '\x73')}
     emit_instruction(state, proto, operands[1:])
 
 def handle_BRK(state, operands):
-    proto = {('', '\x84')}
+    proto = {('', '\x74')}
     emit_instruction(state, proto, operands[1:])
     
 def handle_NOP(state, operands):
