@@ -33,8 +33,11 @@ void write_byte(console_t * con, uint8_t b) {
 void ui_draw_reg(state_t * state) {
     assert(state);
 
+    uint32_t ox = 24;
+    uint32_t oy = 0;
+
     console_t * con = state->console_;
-    cpu16_t * cpu = state->cpu_;
+    cpu16_t   * cpu = state->cpu_;
 
     static
         const char * reg[] = {
@@ -46,9 +49,9 @@ void ui_draw_reg(state_t * state) {
 
     for (int i = 0; i < 16; ++i) {
 
-        con_set_caret(con, 0, i);
+        con_set_caret(con, ox, oy + i);
         con_puts(con, reg[i], 3);
-        con_set_caret(con, 5, -1);
+        con_set_caret(con, ox + 5, -1);
         write_word(con, cpu16_get_register(state->cpu_, i));
     }
 }
@@ -56,27 +59,44 @@ void ui_draw_reg(state_t * state) {
 void ui_draw_mem(state_t * state) {
     assert(state);
 
+    uint32_t ox = 0;
+    uint32_t oy = 17;
+
+    uint32_t width = 8;
+    uint32_t height = 8;
+
     console_t * con = state->console_;
-    cpu16_t * cpu = state->cpu_;
+    cpu16_t   * cpu = state->cpu_;
 
     uint16_t mem = 0;
-    for (int y = 0; y < 8; y++) {
-        con_set_caret(con, 0, 17 + y);
-        for (int x = 0; x < 16; x++) {
+    for (uint32_t y = 0; y < height; y++) {
+
+        con_set_caret(con, ox, oy + y);
+        write_word(con, mem);
+        con_putc(con, ' ');
+        con_putc(con, ' ');
+
+        for (uint32_t x = 0; x < width; x++) {
             uint8_t byte = cpu16_read_byte(cpu, mem + x);
             write_byte(con, byte);
             con_putc(con, ' ');
         }
-        for (int x = 0; x < 16; x++) {
+        con_putc(con, ' ');
+        for (uint32_t x = 0; x < width; x++) {
             uint8_t byte = cpu16_read_byte(cpu, mem + x);
             con_putc(con, byte);
         }
-        mem += 16;
+        mem += width;
     }
 }
 
 void ui_draw_dis(state_t * state) {
     assert(state);
+
+    uint32_t ox = 0;
+    uint32_t oy = 0;
+
+    uint32_t height = 0;
 
     console_t * con = state->console_;
     cpu16_t   * cpu = state->cpu_;
@@ -84,9 +104,9 @@ void ui_draw_dis(state_t * state) {
     uint16_t    adr = cpu16_get_register(cpu, 1);
 
     for (int i = 0; i < 16; ++i) {
-        con_set_caret(con, 15, i);
+        con_set_caret(con, ox, i);
         write_word(con, adr);
-        con_set_caret(con, 21, i);
+        con_set_caret(con, ox+6, i);
 
         cpu16_inst_t dis;
         if (!cpu16_dasm(mem + (adr&0xffff), &dis)) {
@@ -100,7 +120,7 @@ void ui_draw_dis(state_t * state) {
             con_puts(con, (char*)dis.mnemonic_, 32);
 
             for (uint32_t j = 0; j < dis.operands_; j++) {
-                con_set_caret(con, 26 + j * 6, i);
+                con_set_caret(con, ox + 11 + j * 6, i);
                 uint8_t * op = dis.operand_[j];
                 con_puts(con, (char*)op, 8);
             }

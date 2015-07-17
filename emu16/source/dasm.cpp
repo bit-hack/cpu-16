@@ -137,9 +137,7 @@ bool cpu16_dasm(uint8_t * stream, cpu16_inst_t * out) {
     const format_t & fmt = format[op];
     if (!fmt.mnemonic_)
         return false;
-
-    uint32_t ix = 0;
-    
+      
     // output mnemonic
     out->mnemonic_ = fmt.mnemonic_;
     out->operands_ = 0;
@@ -147,7 +145,13 @@ bool cpu16_dasm(uint8_t * stream, cpu16_inst_t * out) {
     uint8_t rx = stream[1] & 0xf;
     uint8_t ry = stream[1] >> 4;
 
-    // output fmt
+    // special case
+    if (op == 0x2a && stream[1] == 0) {
+        out->mnemonic_ = "nop ";
+        return true;
+    }
+
+    // output operands
     for (int i = 0; fmt.format_[i]; ++i, ++out->operands_) {
         assert(i < 3);
 

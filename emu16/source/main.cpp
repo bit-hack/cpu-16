@@ -8,6 +8,9 @@
 #include "main.h"
 #include "ui.h"
 
+const uint32_t con_width  = 40;
+const uint32_t con_height = 32;
+
 static
 void serial_write_8(cpu16_t *, uint16_t addr, uint8_t val, cpu16_device_t * user) {
 
@@ -20,8 +23,8 @@ bool app_init(state_t * state, const char * path) {
     if (SDL_Init(SDL_INIT_VIDEO) != 0)
         return false;
 
-    state->console_ = con_new(64, 32);
-
+    state->running_ = false;
+    state->console_ = con_new(con_width, con_height);
     state->cpu_ = cpu16_new();
     if (!state->cpu_)
         return false;
@@ -61,6 +64,9 @@ void plot(uint32_t * pixels, int x, int y, int c, uint32_t pitch) {
 static
 void draw_console(state_t * state) {
 
+    const uint32_t ox = 8;
+    const uint32_t oy = 80;
+
     extern uint8_t * __cdecl font_3x5_get(uint8_t ch);
 
     SDL_FillRect(state->screen_, nullptr, 0x101010);
@@ -78,8 +84,8 @@ void draw_console(state_t * state) {
             uint8_t * font = font_3x5_get(*ch);
             if (*ch == ' ')
                 continue;
-            uint32_t cx = x * 4 + 48;
-            uint32_t cy = y * 6 + 24;
+            uint32_t cx = x * 4 + ox;
+            uint32_t cy = y * 6 + oy;
             for (uint32_t i = 0; i < 5; i++) {
                 plot(pixels, cx + 0, cy + i, ~font[0] + 1, pitch);
                 plot(pixels, cx + 1, cy + i, ~font[1] + 1, pitch);
@@ -92,19 +98,37 @@ void draw_console(state_t * state) {
 
 static
 void draw_framebuffer(state_t * state) {
+
+    const uint32_t ox = 320 + 96 + 16;
+    const uint32_t oy = 16;
+
     const uint32_t width = state->screen_->w;
     const uint32_t height = state->screen_->w;
     uint32_t * py = (uint32_t*)state->screen_->pixels;
     uint8_t * mem = cpu16_get_memory(state->cpu_);
     mem += 0x4000;
-    py += 16 + width * 16;
+    py += ox + width * oy;
     for (uint32_t y = 0; y < 64; y++) {
         uint32_t * px = py;
-        for (uint32_t x = 0; x < 64; ++x, ++px, ++mem) {
+        for (uint32_t x = 0; x < 64; ++x, px+=3, ++mem) {
             uint8_t c = *mem;
-            *px = (c<<16) | (c<<8) | c;
+            uint32_t rgb = (c << 16) | (c << 8) | c;
+
+            const int r0 = 0;
+            const int r1 = width;
+            const int r2 = width + width;
+
+            px[r0 + 0] = rgb;
+            px[r0 + 1] = rgb;
+            px[r0 + 2] = rgb;
+            px[r1 + 0] = rgb;
+            px[r1 + 1] = rgb;
+            px[r1 + 2] = rgb;
+            px[r2 + 0] = rgb;
+            px[r2 + 1] = rgb;
+            px[r2 + 2] = rgb;
         }
-        py += width;
+        py += width * 3;
     }
 }
 
@@ -125,6 +149,35 @@ void draw_state(state_t * state) {
 }
 
 static
+void dbg_step_inst(state_t * state) {
+    cpu16_run(state->cpu_, 1);
+}
+
+static
+void dbg_step_over(state_t * state) {
+    // insert breakpoint
+    state->running_ = true;
+}
+
+static
+void dbg_continue(state_t * state) {
+    state->running_ = true;
+}
+
+static
+void dbg_pause(state_t * state) {
+    state->running_ = false;
+}
+
+static
+void dbg_breakpoint(state_t * state) {
+    // disassemble instruction
+    // insert brk
+    // if len == 4
+    //   insert nop
+}
+
+static
 bool app_tick(state_t * state) {
 
     SDL_Event event;
@@ -134,8 +187,26 @@ bool app_tick(state_t * state) {
         if (event.type == SDL_KEYDOWN) {
             if (event.key.keysym.sym == SDLK_ESCAPE)
                 return false;
-            if (event.key.keysym.sym == SDLK_F11)
-                cpu16_run(state->cpu_, 1);
+
+            switch (event.key.keysym.sym) {
+            case (SDLK_ESCAPE):
+                return false;
+            case (SDLK_F11) :
+                dbg_step_inst(state);
+                break;
+            case (SDLK_F10) :
+                dbg_step_over(state);
+                break;
+            case (SDLK_F9):
+                dbg_breakpoint(state);
+                break;
+            case (SDLK_F6) :
+                dbg_pause(state);
+                break;
+            case (SDLK_F5):
+                dbg_continue(state);
+                break;
+            }
         }
     }
 
@@ -158,8 +229,15 @@ int main(int argc, const char ** args) {
     }
 
     while (app_tick(&state)) {
-        cpu16_run(state.cpu_, 1);
-//        SDL_Delay(4);
+
+        if (state.running_) {
+            // insert all breakpoints (unless pc is on breakpoint)
+            cpu16_run(state.cpu_, 1024);
+            // remove all breakpoints
+        }
+        else {
+            SDL_Delay(4);
+        }
     }
 
     return 0;
