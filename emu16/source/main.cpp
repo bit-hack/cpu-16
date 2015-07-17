@@ -9,7 +9,7 @@
 #include "ui.h"
 
 const uint32_t con_width  = 40;
-const uint32_t con_height = 32;
+const uint32_t con_height = 28;
 
 static
 void serial_write_8(cpu16_t *, uint16_t addr, uint8_t val, cpu16_device_t * user) {
@@ -42,8 +42,11 @@ bool app_init(state_t * state, const char * path) {
     }
     cpu16_reset(state->cpu_);
 
+    uint32_t flags = 0;
+    flags |= SDL_FULLSCREEN;
+
     SDL_WM_SetCaption("CPU-16", nullptr);
-    state->screen_ = SDL_SetVideoMode(640, 480, 32, 0);
+    state->screen_ = SDL_SetVideoMode(640, 480, 32, flags);
     if (!state->screen_)
         return false;
 
@@ -51,8 +54,9 @@ bool app_init(state_t * state, const char * path) {
 }
 
 static inline
-void plot(uint32_t * pixels, int x, int y, int c, uint32_t pitch) {
-    c |= 0x101010;
+void plot(uint32_t * pixels, int x, int y, uint32_t f, int fgnd, int bgnd, uint32_t pitch) {
+    uint32_t c = (((~f) + 1) & fgnd) | ((f-1) & bgnd);
+//    uint32_t c = (~f) + 1;
     x <<= 1;
     y <<= 1;
     pixels[x   + y * pitch        ] = c;
@@ -61,11 +65,24 @@ void plot(uint32_t * pixels, int x, int y, int c, uint32_t pitch) {
     pixels[x+1 + y * pitch + pitch] = c;
 }
 
+#define RGB(r,g,b) ((r<<16) | (g<<8) | b)
+
+uint32_t palette[16] = {
+    0x101010,           // dark grey
+    0xffffff,           // white
+    RGB( 29,  39,  47), // bgnd blue
+    RGB(  0, 185, 160), // title green
+    RGB(236, 147,   0), // title yellow
+    RGB(166, 180, 171), // code text
+    RGB(255,  15,  25), // code red
+    RGB( 96,  87,  62), // code dull wheat
+};
+
 static
 void draw_console(state_t * state) {
 
     const uint32_t ox = 8;
-    const uint32_t oy = 80;
+    const uint32_t oy = 8;
 
     extern uint8_t * __cdecl font_3x5_get(uint8_t ch);
 
@@ -76,22 +93,34 @@ void draw_console(state_t * state) {
     con_get_buffer(state->console_, &buffer);
 
     uint8_t * ch = buffer.char_;
+    uint8_t * at = buffer.attr_;
 
     const uint32_t pitch = state->screen_->w;
 
     for (uint32_t y = 0; y < buffer.height_; ++y) {
-        for (uint32_t x = 0; x < buffer.width_; ++x, ++ch) {
+        for (uint32_t x = 0; x < buffer.width_; ++x, ++ch, ++at) {
             uint8_t * font = font_3x5_get(*ch);
+#if 0
             if (*ch == ' ')
                 continue;
+#endif
+
+            uint32_t bgnd = palette[(*at) & 0xf];
+            uint32_t fgnd = palette[(*at) >> 4];
+
             uint32_t cx = x * 4 + ox;
             uint32_t cy = y * 6 + oy;
             for (uint32_t i = 0; i < 5; i++) {
-                plot(pixels, cx + 0, cy + i, ~font[0] + 1, pitch);
-                plot(pixels, cx + 1, cy + i, ~font[1] + 1, pitch);
-                plot(pixels, cx + 2, cy + i, ~font[2] + 1, pitch);
+                plot(pixels, cx + 0, cy + i, font[0], fgnd, bgnd, pitch);
+                plot(pixels, cx + 1, cy + i, font[1], fgnd, bgnd, pitch);
+                plot(pixels, cx + 2, cy + i, font[2], fgnd, bgnd, pitch);
+                plot(pixels, cx + 3, cy + i,       0, fgnd, bgnd, pitch);
                 font += 3;
             }
+            plot(pixels, cx + 0, cy + 5, 0, fgnd, bgnd, pitch);
+            plot(pixels, cx + 1, cy + 5, 0, fgnd, bgnd, pitch);
+            plot(pixels, cx + 2, cy + 5, 0, fgnd, bgnd, pitch);
+            plot(pixels, cx + 3, cy + 5, 0, fgnd, bgnd, pitch);
         }
     }
 }

@@ -12,6 +12,8 @@ struct console_t {
     con_point_t  caret_;
     con_rect_t   window_;
     con_buffer_t buffer_;
+
+    uint8_t attr_;
 };
 
 template <typename type_t>
@@ -46,9 +48,11 @@ console_t * con_new(uint32_t width, uint32_t height) {
 
     uint32_t area = width * height;
     con->buffer_.char_ = new uint8_t[area];
-    con->buffer_.attrib_ = new uint8_t[area];
+    con->buffer_.attr_ = new uint8_t[area];
     memset(con->buffer_.char_, 0, area);
-    memset(con->buffer_.attrib_, 0, area);
+    memset(con->buffer_.attr_, 0x52, area);
+
+    con->attr_ = 0x52;
 
     return con;
 }
@@ -56,9 +60,9 @@ console_t * con_new(uint32_t width, uint32_t height) {
 void con_free(console_t * con) {
     assert(con);
     assert(con->buffer_.char_);
-    assert(con->buffer_.attrib_);
+    assert(con->buffer_.attr_);
     delete[] con->buffer_.char_;
-    delete[] con->buffer_.attrib_;
+    delete[] con->buffer_.attr_;
     delete con;
 }
 
@@ -115,6 +119,7 @@ void con_putc(console_t *con, const char ch) {
     assert(cx >= 0 && cx < width);
     assert(cy >= 0 && cy < height);
     con->buffer_.char_[cx + cy * width] = ch;
+    con->buffer_.attr_[cx + cy * width] = con->attr_;
     ++cx;
 }
 
@@ -136,14 +141,23 @@ void con_fill(console_t *con, con_rect_t * area, const char fill_ch) {
     int32_t y2 = clamp_<int32_t>(area->y2_, 0, height - 1);
 
     uint8_t * cy = con->buffer_.char_;
+    uint8_t * ay = con->buffer_.attr_;
+
     cy += y1 * con->buffer_.width_;
     cy += x1;
 
+    ay += y1 * con->buffer_.width_;
+    ay += x1;
+
     for (int32_t y = y1; y <= y2; ++y) {
         uint8_t * cx = cy;
-        for (int32_t x = x1; x <= x2; ++x, ++cx)
+        uint8_t * ax = ay;
+        for (int32_t x = x1; x <= x2; ++x, ++cx, ++ax) {
             *cx = fill_ch;
+            *ay = con->attr_;
+        }
         cy += width;
+        ay += width;
     }
 }
 
@@ -163,4 +177,8 @@ void con_get_buffer(console_t *con, con_buffer_t * info) {
     assert(con);
     assert(info);
     *info = con->buffer_;
+}
+
+void con_set_attr(console_t * con, uint8_t attr) {
+    con->attr_ = attr;
 }

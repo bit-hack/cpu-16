@@ -47,9 +47,14 @@ void ui_draw_reg(state_t * state) {
         "R12", "R13", "R14", "R15",
     };
 
+    con_set_caret(con, ox, oy);
+    con_set_attr(con, 0x24);
+    con_puts(con, "registers", 9);
+    con_set_attr(con, 0x52);
+
     for (int i = 0; i < 16; ++i) {
 
-        con_set_caret(con, ox, oy + i);
+        con_set_caret(con, ox, oy + i + 1);
         con_puts(con, reg[i], 3);
         con_set_caret(con, ox + 5, -1);
         write_word(con, cpu16_get_register(state->cpu_, i));
@@ -60,7 +65,7 @@ void ui_draw_mem(state_t * state) {
     assert(state);
 
     uint32_t ox = 0;
-    uint32_t oy = 17;
+    uint32_t oy = 18;
 
     uint32_t width = 8;
     uint32_t height = 8;
@@ -68,10 +73,15 @@ void ui_draw_mem(state_t * state) {
     console_t * con = state->console_;
     cpu16_t   * cpu = state->cpu_;
 
+    con_set_caret(con, ox, oy);
+    con_set_attr(con, 0x24);
+    con_puts(con, "memory", 6);
+    con_set_attr(con, 0x52);
+
     uint16_t mem = 0;
     for (uint32_t y = 0; y < height; y++) {
 
-        con_set_caret(con, ox, oy + y);
+        con_set_caret(con, ox, oy + y + 1);
         write_word(con, mem);
         con_putc(con, ' ');
         con_putc(con, ' ');
@@ -103,10 +113,16 @@ void ui_draw_dis(state_t * state) {
     uint8_t   * mem = cpu16_get_memory(cpu);
     uint16_t    adr = cpu16_get_register(cpu, 1);
 
+    con_set_caret(con, ox, oy);
+    con_set_attr( con, 0x24 );
+    con_puts(con, "disassembly", 11);
+    con_set_attr(con, 0x52);
+
     for (int i = 0; i < 16; ++i) {
-        con_set_caret(con, ox, i);
+
+        con_set_caret(con, ox, oy+i+1);
         write_word(con, adr);
-        con_set_caret(con, ox+6, i);
+        con_set_caret(con, ox+6, oy+i+1);
 
         cpu16_inst_t dis;
         if (!cpu16_dasm(mem + (adr&0xffff), &dis)) {
@@ -120,7 +136,7 @@ void ui_draw_dis(state_t * state) {
             con_puts(con, (char*)dis.mnemonic_, 32);
 
             for (uint32_t j = 0; j < dis.operands_; j++) {
-                con_set_caret(con, ox + 11 + j * 6, i);
+                con_set_caret(con, ox + 11 + j * 6, oy+i+1);
                 uint8_t * op = dis.operand_[j];
                 con_puts(con, (char*)op, 8);
             }
