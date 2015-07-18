@@ -4,26 +4,42 @@
 #include "dasm.h"
 
 /*
-| 0xCC   | 0x0_          | 0x1_        | 0x2_      | 0x3_       | 0x4_    | 0x5_          | 0x6_     | 0x7_   |
-| ------ | ------------- | ----------- | --------- | ---------- | ------- | ------------- | -------- | ------ |
-| 0x_0   | LDW   RY  RX  | LDW IMM RX  | ADD RY RX | ADD IMM RX | PUSH RX | JMP       IMM | CALL IMM | RETI   |
-| 0x_1   | LDB   RY  RX  | LDB IMM RX  | MUL RY RX | MUL IMM RX | POP  RX | JNE RY RX IMM | INT  IMM | CLI    |
-| 0x_2   | LDW+  RY  RX  |             | SHL RY RX | SHL IMM RX |         | JEQ RY RX IMM |          | STI    |
-| 0x_3   | LDB+  RY  RX  |             | SHR RY RX | SHR IMM RX |         | JL  RY RX IMM |          | RET    |
-| 0x_4   | STW   RY  RX  | STW RX IMM  | SUB RY RX | SUB IMM RX |         | JG  RY RX IMM |          | BRK    |
-| 0x_5   | STB   RY  RX  | STB RX IMM  | DIV RY RX | DIV IMM RX |         | JLE RY RX IMM |          |        |
-| 0x_6   | STW+  RY  RX  |             | MOD RY RX | MOD IMM RX |         | JGE RY RX IMM |          |        |
-| 0x_7   | STB+  RY  RX  |             | AND RY RX | AND IMM RX |         |               |          |        |
-| 0x_8   |               |             | OR  RY RX | OR  IMM RX |         |               |          |        |
-| 0x_9   |               |             | XOR RY RX | XOR IMM RX |         |               |          |        |
-| 0x_A   |               |             | MOV RY RX | MOV IMM RX |         |               |          |        |
-| 0x_B   |               |             | MLH RY RX | MLH IMM RX |         |               |          |        |
+| 0xCC | 0x0_           | 0x1_      | 0x2_       | 0x3_    | 0x4_          | 0x5_     | 0x6_ |
+| ---- | -------------- | --------- | ---------- | ------- | ------------- | -------- | ---- |
+| 0x_0 | LDW  IMM RY RX | ADD RY RX | ADD IMM RX | PUSH RX | JMP       IMM | CALL IMM | RETI |
+| 0x_1 | LDB  IMM RY RX | MUL RY RX | MUL IMM RX | POP  RX | JNE RY RX IMM | INT  IMM | ENI  |
+| 0x_2 | LDW+ IMM RY RX | SHL RY RX | SHL IMM RX |         | JEQ RY RX IMM |          | DAI  |
+| 0x_3 | LDB+ IMM RY RX | SHR RY RX | SHR IMM RX |         | JL  RY RX IMM |          | RET  |
+| 0x_4 | STW  IMM RY RX | SUB RY RX | SUB IMM RX |         | JG  RY RX IMM |          | BRK  |
+| 0x_5 | STB  IMM RY RX | DIV RY RX | DIV IMM RX |         | JLE RY RX IMM |          |      |
+| 0x_6 | STW+ IMM RY RX | MOD RY RX | MOD IMM RX |         | JGE RY RX IMM |          |      |
+| 0x_7 | STB+ IMM RY RX | AND RY RX | AND IMM RX |         |               |          |      |
+| 0x_8 |                | OR  RY RX | OR  IMM RX |         |               |          |      |
+| 0x_9 |                | XOR RY RX | XOR IMM RX |         |               |          |      |
+| 0x_A |                | MOV RY RX | MOV IMM RX |         |               |          |      |
+| 0x_B |                | MLH RY RX | MLH IMM RX |         |               |          |      |
+
+    LDW: RX = memory[(IMM + RY) & 0xffff]
+
+    JEQ: if (RY == RX) PC = IMM
+
 */
 
 struct format_t {
 
     const char * mnemonic_;
     const char * format_;
+};
+
+uint8_t size[] = {
+    2, 2, 2, 2,  2, 2, 2, 2,  0, 0, 0, 0,  0, 0, 0, 0,
+    4, 4, 0, 0,  4, 4, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+    2, 2, 2, 2,  2, 2, 2, 2,  2, 2, 2, 2,  0, 0, 0, 0,
+    4, 4, 4, 4,  4, 4, 4, 4,  4, 4, 4, 4,  0, 0, 0, 0,
+    2, 2, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+    4, 4, 4, 4,  4, 4, 4, 4,  0, 0, 0, 0,  0, 0, 0, 0,
+    4, 4, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+    2, 2, 2, 2,  2, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
 };
 
 format_t format[] = {
@@ -128,7 +144,13 @@ void decode_reg(uint8_t * out, uint8_t num) {
     }
 }
 
-bool cpu16_dasm(uint8_t * stream, cpu16_inst_t * out) {
+uint32_t dasm_length(uint8_t * stream) {
+    if (*stream >= 0x80)
+        return 0;
+    return size[*stream];
+}
+
+bool dasm_decode(uint8_t * stream, dasm_inst_t * out) {
 
     uint8_t op = stream[0];
 

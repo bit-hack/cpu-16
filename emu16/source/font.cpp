@@ -1,14 +1,6 @@
 #include <stdint.h>
 #include <assert.h>
 
-extern uint8_t font_3x5[2048];
-
-extern
-uint8_t * font_3x5_get(uint8_t ch) {
-    ch &= 0x7f;
-    return font_3x5 + (ch * 16);
-}
-
 static
 uint8_t font_3x5[2048] = {
 
@@ -909,3 +901,9 @@ uint8_t font_3x5[2048] = {
     1, 1, 1, 0,
 
 }; // font_4_5
+
+extern
+uint8_t * font_3x5_get(uint8_t ch) {
+    ch &= 0x7f;
+    return font_3x5 + (ch * 16);
+}

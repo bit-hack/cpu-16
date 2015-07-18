@@ -1,7 +1,7 @@
 #pragma once
 #include <stdint.h>
 
-struct cpu16_inst_t {
+struct dasm_inst_t {
 
     uint32_t     size_;
     const char * mnemonic_;
@@ -10,4 +10,7 @@ struct cpu16_inst_t {
 };
 
 extern
-bool cpu16_dasm(uint8_t * stream, cpu16_inst_t * out);
+uint32_t dasm_length(uint8_t * stream);
+
+extern
+bool dasm_decode(uint8_t * stream, dasm_inst_t * out);

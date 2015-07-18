@@ -71,3 +71,14 @@ uint8_t * cpu16_get_memory(cpu16_t *cpu);
 // read a register from CPU16
 extern
 uint16_t cpu16_get_register(cpu16_t *cpu, uint32_t index);
+
+//
+extern
+bool cpu16_add_breakpoint(cpu16_t *cpu, uint16_t addr);
+
+//
+extern
+bool cpu16_remove_breakpoint(cpu16_t *cpu, uint16_t addr);
+
+//
+bool cpu16_patch(cpu16_t * cpu, uint8_t * in, uint32_t in_len, uint8_t * out, uint32_t * out_len);

@@ -1,8 +1,11 @@
-#pragma once
 #include <assert.h>
 #include <string.h>
 
 #include "console.h"
+#include "font.h"
+
+extern
+uint8_t * font_3x5_get(uint8_t ch);
 
 struct con_point_t {
     int32_t x_, y_;
@@ -10,10 +13,9 @@ struct con_point_t {
 
 struct console_t {
     con_point_t  caret_;
-    con_rect_t   window_;
     con_buffer_t buffer_;
-
-    uint8_t attr_;
+    uint32_t     palette_[16];
+    uint8_t      attr_;
 };
 
 template <typename type_t>
@@ -34,6 +36,28 @@ type_t clamp_(type_t in, type_t min, type_t max) {
     return max_(min_(in, max), min);
 }
 
+#define RGB(r,g,b) ((r<<16) | (g<<8) | b)
+
+static
+uint32_t g_palette[16] = {
+    RGB( 16,  16,  16), // dark grey
+    RGB(255, 255, 255), // white
+    RGB( 29,  39,  47), // background blue
+    RGB(  0, 185, 160), // title green
+    RGB(236, 147,   0), // title yellow
+    RGB(166, 180, 171), // code text
+    RGB(255,  15,  25), // code red
+    RGB( 96,  87,  62), // code dull wheat
+    RGB(  0,   0,   0),
+    RGB(  0,   0,   0),
+    RGB(  0,   0,   0),
+    RGB(  0,   0,   0),
+    RGB(  0,   0,   0),
+    RGB(  0,   0,   0),
+    RGB(  0,   0,   0),
+    RGB(  0,   0,   0),
+};
+
 console_t * con_new(uint32_t width, uint32_t height) {
 
     console_t * con = new console_t;
@@ -53,6 +77,8 @@ console_t * con_new(uint32_t width, uint32_t height) {
     memset(con->buffer_.attr_, 0x52, area);
 
     con->attr_ = 0x52;
+
+    memcpy(con->palette_, g_palette, sizeof(uint32_t)*16);
 
     return con;
 }
@@ -91,10 +117,6 @@ void con_puts(console_t *con, const char * str, uint32_t max) {
         ++str;
         --max;
     }
-}
-
-void con_printf(console_t *, const char * fmt, ...) {
-
 }
 
 void con_putc(console_t *con, const char ch) {
@@ -161,18 +183,6 @@ void con_fill(console_t *con, con_rect_t * area, const char fill_ch) {
     }
 }
 
-void con_scroll(console_t *, con_rect_t * area, int dx, int dy) {
-}
-
-void con_get_caret(console_t *con, int * x, int * y) {
-    assert(con);
-    if (x) *x = con->caret_.x_;
-    if (y) *y = con->caret_.y_;
-}
-
-void con_set_window(console_t *, con_rect_t * area) {
-}
-
 void con_get_buffer(console_t *con, con_buffer_t * info) {
     assert(con);
     assert(info);
@@ -180,5 +190,70 @@ void con_get_buffer(console_t *con, con_buffer_t * info) {
 }
 
 void con_set_attr(console_t * con, uint8_t attr) {
+    assert(con);
     con->attr_ = attr;
+}
+
+void con_move(console_t * con, int32_t dx, int32_t dy) {
+    assert(con);
+    con->caret_.x_ = clamp_<int32_t>( 0, con->caret_.x_+dx, con->buffer_.width_-1 );
+    con->caret_.y_ = clamp_<int32_t>( 0, con->caret_.y_+dy, con->buffer_.height_-1 );
+}
+
+void con_render(console_t *con, uint32_t * dst, uint32_t pitch, uint32_t height) {
+
+    //
+    const uint32_t * palette = con->palette_;
+
+    // console size
+    const uint32_t cwidth = con->buffer_.width_;
+    const uint32_t cheight = con->buffer_.height_;
+
+    // font size
+    const uint32_t fwidth  = 4;
+    const uint32_t fheight = 6;
+
+    // source buffers
+    const uint8_t * chr = con->buffer_.char_;
+    const uint8_t * att = con->buffer_.attr_;
+
+    // destination pointer
+    uint32_t * py = dst;
+
+    // vertical slots
+    for (int y=0; y<cheight; ++y, py+=pitch*fheight) {
+        uint32_t * px = py;
+
+        // horizontal chars
+        for (int x=0; x<cwidth; ++x, ++chr, ++att, px+=fwidth) {
+            uint32_t * pt = px;
+
+            // lookup foreground and background colours
+            uint32_t bgnd = palette[att[0] & 0xf];
+            uint32_t fgnd = palette[att[0] >> 4];
+
+            // lookup character
+            const uint8_t * fnt = font_3x5_get(*chr);
+
+            // font scan lines
+            for (int i=0; i<fheight-1; ++i, pt+=pitch, fnt+=3) {
+
+                uint32_t f0 = fnt[0];
+                pt[0] = (((~f0) + 1) & fgnd) | ((f0-1) & bgnd);
+                pt[0] = ((~f0+1) & fgnd) | ((f0-1) & bgnd);
+
+                uint32_t f1 = fnt[1];
+                pt[1] = (((~f1) + 1) & fgnd) | ((f1-1) & bgnd);
+                pt[1] = ((~f1+1) & fgnd) | ((f1-1) & bgnd);
+
+                uint32_t f2 = fnt[2];
+                pt[2] = (((~f2) + 1) & fgnd) | ((f2-1) & bgnd);
+                pt[2] = ((~f2+1) & fgnd) | ((f2-1) & bgnd);
+
+                pt[3] = bgnd;
+            }
+
+            pt[0] = pt[1] = pt[2] = pt[3] = bgnd;
+        }
+    }
 }

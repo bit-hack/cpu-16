@@ -41,6 +41,9 @@ struct cpu16_t {
 
     // device list
     std::vector<cpu16_device_t*> device_;
+
+    // yield to main loop
+    bool yield_;
 };
 
 static inline
@@ -506,6 +509,7 @@ extern
 void cpu16_run (cpu16_t * cpu, uint32_t cycles) {
     assert (cpu);
 
+    cpu->yield_ = false;
     while (cycles > 0) {
         uint32_t ticks = cycles;
         // find max ticks till preemption
@@ -518,6 +522,9 @@ void cpu16_run (cpu16_t * cpu, uint32_t cycles) {
                 ticks = ticks < ctp ? ticks : ctp;
             }
         }
+        //
+        if (cpu->yield_)
+            break;
         // try to interpret for given number of ticks
         uint32_t retired = cpu16_interp (cpu, ticks);
         // advance preemption by number of retired instructions
@@ -536,11 +543,20 @@ bool cpu16_load_image(cpu16_t * cpu_, const char * path) {
     assert (path);
     cpu16_t & cpu = *cpu_;
     FILE * fp = nullptr;
+#if defined(_MSC_VER)
     fopen_s(&fp, path, "rb");
+#else
+    fp = fopen(path, "rb");
+#endif
     if (!fp)
         return false;
+#if defined(_MSC_VER)
     if (fread_s(cpu.mem_, 0x10000, 1, 0x10000, fp) != 0x10000)
         return false;
+#else
+    if (fread(cpu.mem_, 1, 0x10000, fp) != 0x10000)
+        return false;
+#endif
     fclose(fp);
     return true;
 }
@@ -552,6 +568,7 @@ cpu16_t * cpu16_new () {
     memset (cpu->mem_, 0, sizeof (cpu->mem_));
     memset (cpu->reg_, 0, sizeof (cpu->reg_));
     memset (cpu->bus_, 0, sizeof (cpu->bus_));
+    cpu16_reset(cpu);
     return cpu;
 }
 
@@ -566,6 +583,7 @@ void cpu16_reset(cpu16_t * cpu) {
     assert (cpu);
     memset (cpu->reg_, 0, sizeof(cpu->reg_));
     cpu->reg_[REG_PC] = VEC_RESET;
+    cpu->yield_ = false;
 
     // init all devices attached
     for (cpu16_device_t * & device : cpu->device_) {

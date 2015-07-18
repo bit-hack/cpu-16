@@ -6,19 +6,20 @@
 #include <SDL.h>
 
 #include "main.h"
+#include "console.h"
+#include "cpu16.h"
 #include "ui.h"
 
 const uint32_t con_width  = 40;
 const uint32_t con_height = 28;
 
-static
-void serial_write_8(cpu16_t *, uint16_t addr, uint8_t val, cpu16_device_t * user) {
+struct app_state_t {
 
-    putchar(val);
-}
+    SDL_Surface * screen_;
+};
 
 static
-bool app_init(state_t * state, const char * path) {
+bool app_init(state_t * state, app_state_t * app, const char * path) {
 
     if (SDL_Init(SDL_INIT_VIDEO) != 0)
         return false;
@@ -29,12 +30,16 @@ bool app_init(state_t * state, const char * path) {
     if (!state->cpu_)
         return false;
 
+    memset(state->screen_.pixel_, 0x10, 320*240*4);
+
+#if 0
     cpu16_device_t * serial = new cpu16_device_t;
     assert (serial);
     memset (serial, 0, sizeof (cpu16_device_t));
     serial->cycles_till_preempt_ = 0xffff;
     serial->write_byte_ = serial_write_8;
     cpu16_add_device(state->cpu_, serial, 32, 32);
+#endif
 
     if (!cpu16_load_image(state->cpu_, path)) {
         printf("failed to load image\n");
@@ -43,14 +48,31 @@ bool app_init(state_t * state, const char * path) {
     cpu16_reset(state->cpu_);
 
     uint32_t flags = 0;
+#if 0
     flags |= SDL_FULLSCREEN;
+#endif
 
     SDL_WM_SetCaption("CPU-16", nullptr);
-    state->screen_ = SDL_SetVideoMode(640, 480, 32, flags);
-    if (!state->screen_)
+    app->screen_ = SDL_SetVideoMode(640, 480, 32, flags);
+    if (!app->screen_)
         return false;
 
     return true;
+}
+
+void app_free(state_t * state, app_state_t * app) {
+
+    if (state->cpu_)
+        cpu16_free(state->cpu_);
+    state->cpu_ = nullptr;
+
+    if (state->console_)
+        con_free(state->console_);
+    state->console_ = nullptr;
+
+    if (app->screen_)
+        SDL_FreeSurface(app->screen_);
+    SDL_Quit();
 }
 
 static inline
@@ -65,99 +87,27 @@ void plot(uint32_t * pixels, int x, int y, uint32_t f, int fgnd, int bgnd, uint3
     pixels[x+1 + y * pitch + pitch] = c;
 }
 
-#define RGB(r,g,b) ((r<<16) | (g<<8) | b)
-
-uint32_t palette[16] = {
-    0x101010,           // dark grey
-    0xffffff,           // white
-    RGB( 29,  39,  47), // bgnd blue
-    RGB(  0, 185, 160), // title green
-    RGB(236, 147,   0), // title yellow
-    RGB(166, 180, 171), // code text
-    RGB(255,  15,  25), // code red
-    RGB( 96,  87,  62), // code dull wheat
-};
-
-static
-void draw_console(state_t * state) {
-
-    const uint32_t ox = 8;
-    const uint32_t oy = 8;
-
-    extern uint8_t * __cdecl font_3x5_get(uint8_t ch);
-
-    SDL_FillRect(state->screen_, nullptr, 0x101010);
-    uint32_t * pixels = (uint32_t*)state->screen_->pixels;
-
-    con_buffer_t buffer;
-    con_get_buffer(state->console_, &buffer);
-
-    uint8_t * ch = buffer.char_;
-    uint8_t * at = buffer.attr_;
-
-    const uint32_t pitch = state->screen_->w;
-
-    for (uint32_t y = 0; y < buffer.height_; ++y) {
-        for (uint32_t x = 0; x < buffer.width_; ++x, ++ch, ++at) {
-            uint8_t * font = font_3x5_get(*ch);
-#if 0
-            if (*ch == ' ')
-                continue;
-#endif
-
-            uint32_t bgnd = palette[(*at) & 0xf];
-            uint32_t fgnd = palette[(*at) >> 4];
-
-            uint32_t cx = x * 4 + ox;
-            uint32_t cy = y * 6 + oy;
-            for (uint32_t i = 0; i < 5; i++) {
-                plot(pixels, cx + 0, cy + i, font[0], fgnd, bgnd, pitch);
-                plot(pixels, cx + 1, cy + i, font[1], fgnd, bgnd, pitch);
-                plot(pixels, cx + 2, cy + i, font[2], fgnd, bgnd, pitch);
-                plot(pixels, cx + 3, cy + i,       0, fgnd, bgnd, pitch);
-                font += 3;
-            }
-            plot(pixels, cx + 0, cy + 5, 0, fgnd, bgnd, pitch);
-            plot(pixels, cx + 1, cy + 5, 0, fgnd, bgnd, pitch);
-            plot(pixels, cx + 2, cy + 5, 0, fgnd, bgnd, pitch);
-            plot(pixels, cx + 3, cy + 5, 0, fgnd, bgnd, pitch);
-        }
-    }
-}
-
 static
 void draw_framebuffer(state_t * state) {
 
-    const uint32_t ox = 320 + 96 + 16;
-    const uint32_t oy = 16;
+    const uint32_t ox = 160;
+    const uint32_t oy = 0;
 
-    const uint32_t width = state->screen_->w;
-    const uint32_t height = state->screen_->w;
-    uint32_t * py = (uint32_t*)state->screen_->pixels;
+    const uint32_t width = state->screen_.pitch_;
+    const uint32_t height = state->screen_.height_;
+    uint32_t * py = (uint32_t*)state->screen_.pixel_;
+
     uint8_t * mem = cpu16_get_memory(state->cpu_);
     mem += 0x4000;
     py += ox + width * oy;
     for (uint32_t y = 0; y < 64; y++) {
         uint32_t * px = py;
-        for (uint32_t x = 0; x < 64; ++x, px+=3, ++mem) {
+        for (uint32_t x = 0; x < 64; ++x, ++px, ++mem) {
             uint8_t c = *mem;
             uint32_t rgb = (c << 16) | (c << 8) | c;
-
-            const int r0 = 0;
-            const int r1 = width;
-            const int r2 = width + width;
-
-            px[r0 + 0] = rgb;
-            px[r0 + 1] = rgb;
-            px[r0 + 2] = rgb;
-            px[r1 + 0] = rgb;
-            px[r1 + 1] = rgb;
-            px[r1 + 2] = rgb;
-            px[r2 + 0] = rgb;
-            px[r2 + 1] = rgb;
-            px[r2 + 2] = rgb;
+            *px = rgb;
         }
-        py += width * 3;
+        py += width;
     }
 }
 
@@ -165,16 +115,20 @@ static
 void draw_state(state_t * state) {
 
     console_t * con = state->console_;
-    cpu16_t * cpu = state->cpu_;
+    cpu16_t   * cpu = state->cpu_;
 
     con_fill(con, nullptr, ' ');
 
-    ui_draw_reg(state);
-    ui_draw_mem(state);
-    ui_draw_dis(state);
+    // draw ui elements to the console
+    ui_draw(state);
 
-    draw_console(state);
     draw_framebuffer(state);
+
+    // draw console to the screen
+    con_render(con,
+               state->screen_.pixel_,
+               state->screen_.pitch_,
+               state->screen_.height_);
 }
 
 static
@@ -207,7 +161,7 @@ void dbg_breakpoint(state_t * state) {
 }
 
 static
-bool app_tick(state_t * state) {
+bool app_tick(state_t * state, app_state_t * app) {
 
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -235,13 +189,46 @@ bool app_tick(state_t * state) {
             case (SDLK_F5):
                 dbg_continue(state);
                 break;
+            default:
+                break;
             }
         }
     }
 
     draw_state(state);
-    SDL_Flip(state->screen_);
+    SDL_Flip(app->screen_);
     return true;
+}
+
+void blit_1x(state_t * state, app_state_t *app) {
+
+    uint32_t * dst_y = (uint32_t*) app->screen_->pixels;
+    uint32_t   dst_pitch = app->screen_->w;
+
+    uint32_t * src_y = (uint32_t*) state->screen_.pixel_;
+    uint32_t   src_pitch = state->screen_.pitch_;
+
+    for (uint32_t y=0; y<240; ++y) {
+
+        uint32_t * dst_x = dst_y;
+        uint32_t * src_x = src_y;
+
+        for (uint32_t x=0; x<320; ++x) {
+
+            uint32_t rgb = *src_x;
+
+            dst_x[0] = rgb;
+            dst_x[1] = rgb;
+            dst_x[dst_pitch+0] = rgb;
+            dst_x[dst_pitch+1] = rgb;
+
+            src_x += 1;
+            dst_x += 2;
+        }
+
+        src_y += src_pitch;
+        dst_y += dst_pitch * 2;
+    }
 }
 
 int main(int argc, const char ** args) {
@@ -252,12 +239,13 @@ int main(int argc, const char ** args) {
     }
 
     state_t state;
+    app_state_t app;
 
-    if (!app_init(&state, args[1])) {
+    if (!app_init(&state, &app, args[1])) {
         return false;
     }
 
-    while (app_tick(&state)) {
+    while (app_tick(&state, &app)) {
 
         if (state.running_) {
             // insert all breakpoints (unless pc is on breakpoint)
@@ -267,7 +255,10 @@ int main(int argc, const char ** args) {
         else {
             SDL_Delay(4);
         }
+
+        blit_1x(&state, &app);
     }
 
+    app_free(&state, &app);
     return 0;
 }
