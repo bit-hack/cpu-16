@@ -22,24 +22,46 @@ function main
     - r3 = x
     - r4 = y
     - r5 = i
+    - r8 = time
     mov     ZR    r5
 .loop
+    jne     zr    r5    %skip
+    add     #1    r8
+.skip
     - calculate x coordinate
     mov     r5    r7
     and     #3f   r7
     shl     #2    r7
+
+    mov     r8    r9
+    shr     #2    r9
+    add     r9    r7
+    and     #ff   r7
+    ldb     #0    r7    r7
+
     - calculate y coordinate
     mov     r5    r4
     shr     #6    r4
     shl     #2    r4 
+
+    mov     r8    r9
+    shr     #3    r9
+    add     r9    r4
+    and     #ff   r4
+    ldb     #0    r4    r4
+
     - multiply to make gradient
     mov     r7    r6
     mul     r4    r6
     shr     #8    r6
+
+    - index the sin buffer
+    add     r8    r6
+    and     #ff   r6
     ldb     #0    r6    r6
+
     - store in framebuffer
     stb+    r6    #4000 r5
-    - wrap index
     and     #0fff r5
     jmp     %loop
 end
