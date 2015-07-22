@@ -1,0 +1,614 @@
+{\rtf1\ansi\ansicpg1252\deff0\deflang2057{\fonttbl{\f0\fnil\fcharset0 Courier New;}{\f1\fnil\fcharset0 Calibri;}}
+{\colortbl ;\red0\green255\blue255;\red0\green0\blue0;\red238\green238\blue238;\red255\green255\blue255;}
+{\*\generator Msftedit 5.41.21.2510;}\viewkind4\uc1\pard\sl240\slmult1\qc\lang9\b\f0\fs22 - Registers -\par
+\pard\sl240\slmult1\b0\f1\par
+\pard\sl240\slmult1\qj\f0 The ASM16 CPU has 16 internal registers, with each register being 16 bits in size (WORD).  Some registers have specific roles during the operation of the ASM16 cpu.  Registers R04 to R15 have no specific purpose and can be used freely. \par
+\pard\sl240\slmult1\f1\par
+\pard\sl240\slmult1\qc\par
+\trowd\trgaph54\trqc\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx1454\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx3164\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx6134\pard\intbl\sl240\slmult1\f0 Register\f1\cell\f0 Alias\f1\cell\f0 Description\f1\cell\row\trowd\trgaph54\trqc\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx1454\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx3164\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx6134\pard\intbl\sl240\slmult1\f0 R00\f1\cell\f0 ZR\f1\cell\f0 Zero register\f1\cell\row\trowd\trgaph54\trqc\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx1454\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx3164\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx6134\pard\intbl\sl240\slmult1\f0 R01\f1\cell\f0 PC\f1\cell\f0 Program counter\f1\cell\row\trowd\trgaph54\trqc\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx1454\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx3164\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx6134\pard\intbl\sl240\slmult1\f0 R02\f1\cell\f0 SP\f1\cell\f0 Stack pointer\f1\cell\row\trowd\trgaph54\trqc\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx1454\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx3164\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx6134\pard\intbl\sl240\slmult1\f0 R03\f1\cell\f0 CR\f1\cell\f0 Control register\f1\cell\row\trowd\trgaph54\trqc\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx1454\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx3164\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx6134\pard\intbl\sl240\slmult1\f0 R04\f1\cell\f0 -\f1\cell\f0 General purpose\f1\cell\row\trowd\trgaph54\trqc\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx1454\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx3164\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx6134\pard\intbl\sl240\slmult1\f0 R05\f1\cell\f0 -\f1\cell\f0\ldblquote\f1\cell\row\trowd\trgaph54\trqc\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx1454\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx3164\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx6134\pard\intbl\sl240\slmult1\f0 R06\f1\cell\f0 -\f1\cell\f0\ldblquote\f1\cell\row\trowd\trgaph54\trqc\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx1454\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx3164\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx6134\pard\intbl\sl240\slmult1\f0 R07\f1\cell\f0 -\f1\cell\f0\ldblquote\f1\cell\row\trowd\trgaph54\trqc\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx1454\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx3164\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx6134\pard\intbl\sl240\slmult1\f0 R08\f1\cell\f0 -\f1\cell\f0\ldblquote\f1\cell\row\trowd\trgaph54\trqc\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx1454\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx3164\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx6134\pard\intbl\sl240\slmult1\f0 R09\f1\cell\f0 -\f1\cell\f0\ldblquote\f1\cell\row\trowd\trgaph54\trqc\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx1454\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx3164\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx6134\pard\intbl\sl240\slmult1\f0 R10\f1\cell\f0 -\f1\cell\f0\ldblquote\f1\cell\row\trowd\trgaph54\trqc\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx1454\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx3164\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx6134\pard\intbl\sl240\slmult1\f0 R11\f1\cell\f0 -\f1\cell\f0\ldblquote\f1\cell\row\trowd\trgaph54\trqc\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx1454\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx3164\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx6134\pard\intbl\sl240\slmult1\f0 R12\f1\cell\f0 -\f1\cell\f0\ldblquote\f1\cell\row\trowd\trgaph54\trqc\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx1454\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx3164\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx6134\pard\intbl\sl240\slmult1\f0 R13\f1\cell\f0 -\f1\cell\f0\ldblquote\f1\cell\row\trowd\trgaph54\trqc\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx1454\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx3164\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx6134\pard\intbl\sl240\slmult1\f0 R14\f1\cell\f0 -\f1\cell\f0\ldblquote\f1\cell\row\trowd\trgaph54\trqc\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx1454\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx3164\clcfpat2\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx6134\pard\intbl\sl240\slmult1\f0 R15\f1\cell\f0 -\f1\cell\f0\ldblquote\f1\cell\row\pard\sl240\slmult1\par
+\par
+\pard\sl240\slmult1\b\f0 Zero Register:\par
+\b0\f1\par
+\b\f0\tab\b0 All reads from register R0 (ZR) will return the value 0.\par
+Writes to this register will have no effect.\par
+\f1\par
+\b\f0 Program Counter:\par
+\b0\f1\par
+\pard\sl240\slmult1\qj\b\f0\tab\b0 Every clock cycle the ASM16 CPU will fetch an instruction from main memory at the address contained in R1 (PC). After the execution of each instruction the PC register will be incremented by the instructions size.  The PC will not advance however if the instruction branches (JMP, CALL, RET, etc).\par
+\pard\sl240\slmult1\f1\par
+\b\f0 Stack Pointer:\par
+\b0\f1\par
+\pard\sl240\slmult1\qj\b\f0\tab\b0 The ASM16 CPU has hardware support for a stack via register R2 (SP).  The stack operates with 16 bit values only.  The stack is said to grow downward, as stack push operations decrement SP by two.  Pop operations increment the stack by two.\par
+\pard\sl240\slmult1\f1\par
+\b\f0 Control Register:\par
+\b0\f1\par
+\pard\sl240\slmult1\qj\f0\tab R02 is the control register which can enable or disable certain modes of operation and on chip peripherals.\par
+\pard\sl240\slmult1\f1\par
+\f0\tab CR Layout: 0000 0000 0000 000i\par
+\f1\par
+\f0\tab Field [i]\tab 0: interrupts disabled\par
+\tab\tab\tab 1: interrupts enabled\par
+\f1\par
+\par
+\pard\sl240\slmult1\qc\b\f0 - Instruction Format -\par
+\pard\sl240\slmult1\b0\f1\par
+\f0 All ASM16 instructions are either two bytes or four bytes in length.\par
+The Immediate field, if present is stored in little endian format.\par
+\f1\par
+\f0\tab 2 byte encoding:\par
+\b\tab\tab\b0 [cccc cccc] [yyyy xxxx]\par
+\f1\par
+\f0\tab 4 byte encoding:\par
+\tab\tab [cccc cccc] [yyyy xxxx] [iiii iiii] [iiii iiii]\par
+\f1\par
+\f0\tab Where:\par
+\pard\li709\sl240\slmult1\tab c = Opcode specifier\par
+\tab x = Rx register index\par
+\tab y = Ry register index\par
+\tab I = 16 bit immediate value\par
+\pard\sl240\slmult1\f1\par
+\par
+\pard\sl240\slmult1\qc\b\f0 - Opcode Table -\par
+\pard\sl240\slmult1\b0\f1\par
+\f0 The following table shows the derivation of opcode.\par
+Each mnemonic is followed by a listing of the operands used.\par
+The operands are specified according to the syntax of asm16 assembly language.\par
+\f1\par
+\trowd\trrh1\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx732\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx2355\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx3660\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx4860\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx6075\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx7470\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx8670\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9570\pard\intbl\sl240\slmult1\f0 0xcc\f1\cell\f0 0x0_\f1\cell\f0 0x1_\f1\cell\f0 0x2_\f1\cell\f0 0x3_\f1\cell\f0 0x4_\f1\cell\f0 0x5_\f1\cell\cell\row\trowd\trrh1\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx732\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx2355\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx3660\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx4860\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx6075\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx7470\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx8670\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9570\pard\intbl\sl240\slmult1\f0 0x_0\f1\cell\f0 LDW  IYX\f1\cell\f0 ADD YX\f1\cell\f0 ADD IX\f1\cell\f0 PUSH X\f1\cell\f0 JMP I\f1\cell\f0 RET\f1\cell\cell\row\trowd\trrh1\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx732\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx2355\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx3660\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx4860\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx6075\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx7470\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx8670\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9570\pard\intbl\sl240\slmult1\f0 0x_1\f1\cell\f0 LDB  IYX\f1\cell\f0 SUB YX\f1\cell\f0 SUB IX\f1\cell\f0 POP  X\f1\cell\f0 JNE YXI\f1\cell\f0 BRK\f1\cell\cell\row\trowd\trrh1\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx732\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx2355\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx3660\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx4860\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx6075\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx7470\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx8670\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9570\pard\intbl\sl240\slmult1\f0 0x_2\f1\cell\f0 LDW+ IYX\f1\cell\f0 MUL YX\f1\cell\f0 MUL IX\f1\cell\cell\f0 JEQ YXI\f1\cell\cell\cell\row\trowd\trrh1\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx732\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx2355\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx3660\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx4860\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx6075\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx7470\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx8670\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9570\pard\intbl\sl240\slmult1\f0 0x_3\f1\cell\f0 LDB+ IYX\f1\cell\f0 MLH YX\f1\cell\f0 MLH IX\f1\cell\cell\f0 JL  YXI\f1\cell\cell\cell\row\trowd\trrh1\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx732\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx2355\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx3660\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx4860\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx6075\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx7470\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx8670\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9570\pard\intbl\sl240\slmult1\f0 0x_4\f1\cell\f0 STW  YIX\f1\cell\f0 DIV YX\f1\cell\f0 DIV IX\f1\cell\cell\f0 JG  YXI\f1\cell\cell\cell\row\trowd\trrh1\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx732\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx2355\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx3660\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx4860\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx6075\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx7470\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx8670\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9570\pard\intbl\sl240\slmult1\f0 0x_5\f1\cell\f0 STB  YIX\f1\cell\f0 MOD YX\f1\cell\f0 MOD IX\f1\cell\cell\f0 JLE YXI\f1\cell\cell\cell\row\trowd\trrh1\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx732\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx2355\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx3660\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx4860\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx6075\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx7470\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx8670\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9570\pard\intbl\sl240\slmult1\f0 0x_6\f1\cell\f0 STW+ YIX\f1\cell\f0 SHL YX\f1\cell\f0 SHL IX\f1\cell\cell\f0 JGE YXI\f1\cell\cell\cell\row\trowd\trrh1\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx732\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx2355\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx3660\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx4860\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx6075\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx7470\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx8670\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9570\pard\intbl\sl240\slmult1\f0 0x_7\f1\cell\f0 STB+ YIX\f1\cell\f0 SHR YX\f1\cell\f0 SHR IX\f1\cell\cell\f0 CALL I\f1\cell\cell\cell\row\trowd\trrh1\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx732\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx2355\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx3660\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx4860\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx6075\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx7470\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx8670\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9570\pard\intbl\sl240\slmult1\f0 0x_8\f1\cell\cell\f0 AND YX\f1\cell\f0 AND IX\f1\cell\cell\cell\cell\cell\row\trowd\trrh1\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx732\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx2355\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx3660\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx4860\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx6075\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx7470\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx8670\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9570\pard\intbl\sl240\slmult1\f0 0x_9\f1\cell\cell\f0 OR  YX\f1\cell\f0 OR  IX\f1\cell\cell\cell\cell\cell\row\trowd\trrh1\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx732\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx2355\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx3660\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx4860\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx6075\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx7470\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx8670\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9570\pard\intbl\sl240\slmult1\f0 0x_A\f1\cell\cell\f0 XOR YX\f1\cell\f0 XOR IX\f1\cell\cell\cell\cell\cell\row\trowd\trrh1\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx732\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx2355\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx3660\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx4860\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx6075\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx7470\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx8670\clcfpat2\clcbpat4\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9570\pard\intbl\sl240\slmult1\f0 0x_B\f1\cell\cell\f0 MOV YX\f1\cell\f0 MOV IX\f1\cell\cell\cell\cell\cell\row\pard\sl240\slmult1\par
+\par
+\pard\sl240\slmult1\qc\b\f0 - LOAD/STORE MEMORY ACCESS -\par
+\pard\sl240\slmult1\b0\f1\par
+\trowd\trgaph54\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9638\pard\intbl\sl240\slmult1\b\f0 LDW\b0\f1\cell\row\pard\sl240\slmult1\f0\tab Description:\par
+\tab\tab Load register Rx with word from memory address Imm+Ry.\par
+\f1\par
+\f0\tab Format:\par
+\tab\tab LDW IMM RY RX\par
+\tab\tab\tab  0x00\par
+\tab\tab\tab [0000 0000] [yyyy xxxx] [iiii iiii] [iiii iiii]\par
+\f1\par
+\f0\tab Operation:\par
+\tab\tab Rx  = Memory[Imm + Ry]\par
+\tab\tab PC += 4\par
+\f1\par
+\par
+\trowd\trgaph54\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9638\pard\intbl\sl240\slmult1\b\f0 LDB \b0\f1\cell\row\pard\sl240\slmult1\f0\tab Description:\par
+\tab\tab Load register Rx with byte from memory address Imm+Ry.\par
+\f1\par
+\f0\tab Format:\par
+\tab\tab LDW IMM RY RX\par
+\tab\tab\tab  0x01\par
+\tab\tab\tab [0000 0001] [yyyy xxxx] [iiii iiii] [iiii iiii]\par
+\f1\par
+\f0\tab Operation:\par
+\tab\tab Rx  = Memory[Imm + Ry] & 0x00ff\par
+\tab\tab PC +=4\par
+\f1\par
+\trowd\trgaph54\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9638\pard\intbl\sl240\slmult1\b\f0 STW \b0\f1\cell\row\pard\sl240\slmult1\f0\tab Description:\par
+\tab\tab Store a word from register Rx to memory address Imm+Ry.\par
+\f1\par
+\f0\tab Format:\par
+\tab\tab STW RX IMM RY\par
+\tab\tab\tab  0x04\par
+\tab\tab\tab [0000 0100] [yyyy xxxx] [iiii iiii] [iiii iiii]\par
+\f1\par
+\f0\tab Operation:\par
+\tab\tab Memory[Imm + Ry] = Rx\par
+\tab\tab PC += 4\par
+\f1\par
+\par
+\trowd\trgaph54\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9638\pard\intbl\sl240\slmult1\b\f0 STB \b0\f1\cell\row\pard\sl240\slmult1\f0\tab Description:\par
+\tab\tab Store a byte from register to memory.\par
+\f1\par
+\f0\tab Format:\par
+\tab\tab STB RX IMM RY\par
+\tab\tab\tab  0x05\par
+\tab\tab\tab [0000 0101] [yyyy xxxx] [iiii iiii] [iiii iiii]\par
+\f1\par
+\f0\tab Operation:\par
+\tab\tab Memory[Imm + Ry] = Rx & 0xff\par
+\tab\tab PC += 4\par
+ \par
+\f1\par
+\trowd\trgaph54\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9638\pard\intbl\sl240\slmult1\b\f0 STW+ \b0\f1\cell\row\pard\sl240\slmult1\f0\tab Description:\par
+\tab\tab Store a word from register Rx to memory Imm+Ry then increment Ry by two.\par
+\f1\par
+\f0\tab Format:\par
+\tab\tab STB RX IMM RY\par
+\tab\tab\tab  0x06\par
+\tab\tab\tab [0000 0110] [yyyy xxxx] [iiii iiii] [iiii iiii]\par
+\f1\par
+\f0\tab Operation:\par
+\tab\tab Memory[Imm + Ry] = Rx\par
+\tab\tab Ry += 2\par
+\tab\tab PC += 4\par
+\f1\par
+\par
+\trowd\trgaph54\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9638\pard\intbl\sl240\slmult1\b\f0 STB+\b0\f1\cell\row\pard\sl240\slmult1\f0\tab Description:\par
+\tab\tab Store a byte from register to memory and increment the address.\par
+\f1\par
+\f0\tab Format:\par
+\tab\tab STB RX IMM RY\par
+\tab\tab\tab  0x07\par
+\tab\tab\tab [0000 0111] [yyyy xxxx] [iiii iiii] [iiii iiii]\par
+\f1\par
+\f0\tab Operation:\par
+\tab\tab Memory[Imm + Ry] = Rx & 0xff\par
+\tab\tab Ry += 1\par
+\tab\tab PC += 4\par
+\f1\par
+\pard\sl240\slmult1\qc\b\f0 - ARITHMETIC AND LOGIC -\par
+\pard\sl240\slmult1\b0\f1\par
+\trowd\trgaph54\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9638\pard\intbl\sl240\slmult1\b\f0 ADD\b0\f1\cell\row\pard\sl240\slmult1\f0\tab Description:\par
+\tab\tab Add a source value to destination register Rx.\par
+\f1\par
+\f0\tab Format:\par
+\tab a)\tab ADD RY RX\par
+\tab\tab\tab  0x10\par
+\tab\tab\tab [0001 0000] [yyyy xxxx]\par
+\f1\par
+\f0\tab b)\tab ADD IMM RX\par
+\tab\tab\tab  0x20\par
+\tab\tab\tab [0010 0000] [0000 xxxx] [iiii iiii] [iiii iiii]\par
+\f1\par
+\f0\tab Operation:\par
+\tab a)\tab Rx  = Rx + Ry\par
+\tab\tab PC += 2\par
+\tab\tab\par
+\tab b)\tab Rx  = Rx + Imm\par
+\tab\tab PC += 4\par
+\f1\par
+\par
+\trowd\trgaph54\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9638\pard\intbl\sl240\slmult1\b\f0 SUB\b0\f1\cell\row\pard\sl240\slmult1\f0\tab Description:\par
+\tab\tab Subtract a source value from destination register Rx.\par
+\f1\par
+\f0\tab Format:\par
+\tab a)\tab SUB RY RX\par
+\tab\tab\tab 0x11\par
+\tab\tab\tab [0001 0001] [yyyy xxxx]\par
+\f1\par
+\f0\tab b)\tab SUB IMM RX\par
+\tab\tab\tab 0x21\par
+\tab\tab\tab [0010 0001] [0000 xxxx] [iiii iiii] [iiii iiii]\par
+\f1\par
+\f0\tab Operation:\par
+\tab a)\tab Rx  = Rx \endash  Ry\par
+\tab\tab PC += 2\par
+\tab\par
+\tab b)\tab Rx  = Rx \endash  Imm\par
+\tab\tab PC += 4\par
+\f1\par
+\par
+\trowd\trgaph54\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9638\pard\intbl\sl240\slmult1\b\f0 MUL\b0\f1\cell\row\pard\sl240\slmult1\f0\tab Description:\par
+\tab\tab Multiply two word values and place the low word product into destination register Rx.\par
+\f1\par
+\f0\tab Format:\par
+\tab a)\tab MUL RY RX\par
+\tab\tab\tab  0x12\par
+\tab\tab  \tab [0001 0010] [yyyy xxxx]\par
+\f1\par
+\f0\tab b)\tab MUL IMM RX\par
+\tab\tab  \tab  0x22\par
+\tab\tab  \tab [0010 0010] [0000 xxxx] [iiii iiii] [iiii iiii]\par
+\f1\par
+\f0\tab Operation:\par
+\tab a)\tab Rx  = (Rx * Ry) & 0xffff\par
+\tab\tab PC += 2\par
+\tab\par
+\tab b)\tab Rx  = (Rx * Imm) & 0xffff\par
+\tab\tab PC += 4\par
+\f1\par
+\par
+\trowd\trgaph54\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9638\pard\intbl\sl240\slmult1\b\f0 MLH\b0\f1\cell\row\pard\sl240\slmult1\f0\tab Description:\par
+\tab\tab Multiply two word values and place high word product into destination register Rx.\par
+\f1\par
+\f0\tab Format:\par
+\tab a)\tab MLH RY RX\par
+\tab\tab\tab  0x13\par
+\tab\tab\tab [0001 0011] [yyyy xxxx]\par
+\f1\par
+\f0\tab b)\tab MLH IMM RX\par
+\tab\tab\tab  0x23\par
+\tab\tab\tab [0010 0011] [0000 xxxx] [iiii iiii] [iiii iiii]\par
+\f1\par
+\f0\tab Operation:\par
+\tab a)\tab Rx  = (Rx * Ry ) >> 16\par
+\tab\tab PC += 2\par
+\tab\par
+\tab b)\tab Rx  = (Rx * Imm) >> 16\par
+\tab\tab PC += 4\par
+\f1\par
+\par
+\trowd\trgaph54\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9638\pard\intbl\sl240\slmult1\b\f0 DIV\b0\f1\cell\row\pard\sl240\slmult1\f0\tab Description:\par
+\tab\tab Divide the destination register Rx by a source value.\par
+\f1\par
+\f0\tab Format:\par
+\tab a)\tab DIV RY RX\par
+\tab\tab\tab  0x14\par
+\tab\tab\tab [0001 0100] [yyyy xxxx]\par
+\f1\par
+\f0\tab b)\tab DIV IMM RX\par
+\tab\tab\tab  0x24\par
+\tab\tab\tab [0010 0100] [0000 xxxx] [iiii iiii] [iiii iiii]\par
+\f1\par
+\f0\tab Operation:\par
+\tab a)\tab Rx  = Rx / Ry\par
+\tab\tab PC += 2\par
+\tab\par
+\tab b)\tab Rx  = Rx / Imm\par
+\tab\tab PC += 4\par
+\f1\par
+\par
+\trowd\trgaph54\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9638\pard\intbl\sl240\slmult1\b\f0 MOD\b0\f1\cell\row\pard\sl240\slmult1\f0\tab Description:\par
+\tab\tab Place the remainder after division, Rx by source value, into destination register Rx.\par
+\f1\par
+\f0\tab Format:\par
+\tab a)\tab MOD RY RX\par
+\tab\tab\tab  0x15\par
+\tab\tab\tab [0001 0101] [yyyy xxxx]\par
+\f1\par
+\f0\tab b)\tab MOD IMM RX\par
+\tab\tab\tab  0x25\par
+\tab\tab\tab [0010 0101] [0000 xxxx] [iiii iiii] [iiii iiii]\par
+\f1\par
+\f0\tab Operation:\par
+\tab a)\tab Rx  = Rx % Ry\par
+\tab\tab PC += 2\par
+\tab\par
+\tab b)\tab Rx  = Rx % Imm\par
+\tab\tab PC += 4\par
+\f1\par
+\par
+\trowd\trgaph54\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9638\pard\intbl\sl240\slmult1\b\f0 SHL\b0\f1\cell\row\pard\sl240\slmult1\f0\tab Description:\par
+\tab\tab Arithmetic shift left the destination Register Rx.\par
+\f1\par
+\f0\tab Format:\par
+\tab a)\tab SHL RY RX\par
+\tab\tab\tab  0x16\par
+\tab\tab\tab [0001 0110] [yyyy xxxx]\par
+\f1\par
+\f0\tab b)\tab SHL IMM RX\par
+\tab\tab\tab  0x26\par
+\tab\tab\tab [0010 0110] [0000 xxxx] [iiii iiii] [iiii iiii]\par
+\f1\par
+\f0\tab Operation:\par
+\tab a)\tab Rx  = Rx << Ry\par
+\tab\tab PC += 2\par
+\tab\par
+\tab b)\tab Rx  = Rx << Imm\par
+\tab\tab PC += 4\par
+\f1\par
+\par
+\trowd\trgaph54\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9638\pard\intbl\sl240\slmult1\b\f0 SHR\b0\f1\cell\row\pard\sl240\slmult1\f0\tab Description:\par
+\tab\tab Arithmetic shift right the destination Register Rx.  All bits shifted in from the left match the old most significant bit.\par
+\f1\par
+\f0\tab Format:\par
+\tab a)\tab SHR RY RX\par
+\tab\tab\tab  0x17\par
+\tab\tab\tab [0001 0111] [yyyy xxxx]\par
+\f1\par
+\f0\tab b)\tab SHR IMM RX\par
+\tab\tab\tab  0x27\par
+\tab\tab\tab [0010 0111] [0000 xxxx] [iiii iiii] [iiii iiii]\par
+\f1\par
+\f0\tab Operation:\par
+\tab a)\tab Rx  = Rx >> Ry\par
+\tab\tab PC += 2\par
+\tab\par
+\tab b)\tab Rx  = Rx >> Imm\par
+\tab\tab PC += 4\par
+\f1\par
+\par
+\trowd\trgaph54\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9638\pard\intbl\sl240\slmult1\b\f0 AND\b0\f1\cell\row\pard\sl240\slmult1\f0\tab Description:\par
+\tab\tab Bitwise AND of the destination register Rx and a source value.\par
+\f1\par
+\f0\tab Format:\par
+\tab a)\tab AND RY RX\par
+\tab\tab\tab  0x18\par
+\tab\tab\tab [0001 1000] [yyyy xxxx]\par
+\f1\par
+\f0\tab b)\tab AND IMM RX\par
+\tab\tab\tab  0x28\par
+\tab\tab\tab [0010 1000] [0000 xxxx]\par
+\f1\par
+\f0\tab Operation:\par
+\tab a)\tab Rx  = Rx & Ry\par
+\tab\tab PC += 2\par
+\tab\par
+\tab b)\tab Rx  = Rx & Imm\par
+\tab\tab PC += 4\par
+\f1\par
+\par
+\trowd\trgaph54\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9638\pard\intbl\sl240\slmult1\b\f0 OR\b0\f1\cell\row\pard\sl240\slmult1\f0\tab Description:\par
+\tab\tab Bitwise or of the destination registers Rx and a source value.\par
+\f1\par
+\f0\tab Format:\par
+\tab a)\tab DIV RY RX\par
+\tab\tab\tab  0x19\par
+\tab\tab\tab [0001 1001] [yyyy xxxx]\par
+\f1\par
+\f0\tab b)\tab DIV IMM RX\par
+\tab\tab\tab  0x29\par
+\tab\tab\tab [0010 1001] [0000 xxxx] [iiii iiii] [iiii iiii]\par
+\f1\par
+\f0\tab Operation:\par
+\tab a)\tab Rx  = Rx | Ry\par
+\tab\tab PC += 2\par
+\tab\par
+\tab b)\tab Rx  = Rx | Imm\par
+\tab\tab PC += 4\par
+\f1\par
+\trowd\trgaph54\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9638\pard\intbl\sl240\slmult1\b\f0 XOR\b0\f1\cell\row\pard\sl240\slmult1\f0\tab Description:\par
+\tab\tab Bitwise exclusive OR of the destination register Rx and a source value.\par
+\f1\par
+\f0\tab Format:\par
+\tab a)\tab DIV RY RX\par
+\tab\tab\tab  0x1a\par
+\tab\tab\tab [0001 1010] [yyyy xxxx]\par
+\f1\par
+\f0\tab b)\tab DIV IMM RX\par
+\tab\tab\tab  0x2a\par
+\tab\tab\tab [0010 1010] [0000 xxxx] [iiii iiii] [iiii iiii]\par
+\f1\par
+\f0\tab Operation:\par
+\tab a)\tab Rx  = Rx ^ Ry\par
+\tab\tab PC += 2\par
+\tab\par
+\tab b)\tab Rx  = Rx ^ Imm\par
+\tab\tab PC += 4\par
+\f1\par
+\par
+\trowd\trgaph54\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9638\pard\intbl\sl240\slmult1\b\f0 MOV\b0\f1\cell\row\pard\sl240\slmult1\f0\tab Description:\par
+\tab\tab Move a source value into the destination register Rx.\par
+\f1\par
+\f0\tab Format:\par
+\tab a)\tab MOV RY RX\par
+\tab\tab\tab  0x1b\par
+\tab\tab\tab [0001 1011] [yyyy xxxx]\par
+\f1\par
+\f0\tab b)\tab MOV IMM RX\par
+\tab\tab\tab  0x2b\par
+\tab\tab\tab [0010 1011] [0000 xxxx] [iiii iiii] [iiii iiii]\par
+\f1\par
+\f0\tab Operation:\par
+\tab a)\tab Rx  = Ry\par
+\tab\tab PC += 2\par
+\tab\par
+\tab b)\tab Rx  = Imm\par
+\tab\tab PC += 4\par
+\f1\par
+\par
+\pard\sl240\slmult1\qc\b\f0 - SINGLE OPERAND INSTRUCTIONS -\par
+\pard\sl240\slmult1\b0\f1\par
+\trowd\trgaph54\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9638\pard\intbl\sl240\slmult1\b\f0 PUSH\b0\f1\cell\row\pard\sl240\slmult1\f0\tab Description:\par
+\tab\tab Push a word value from source register Rx onto the processor stack.\par
+\f1\par
+\f0\tab Format:\par
+\tab\tab PUSH Rx\par
+\tab\tab  0x30\par
+\tab\tab [0011 0000] [0000 xxxx]\par
+\f1\par
+\f0\tab Operation:\par
+\tab\tab SP -= 2\par
+\tab\tab Rx  = Memory[SP]\par
+\tab\tab PC += 2\par
+\f1\par
+\par
+\trowd\trgaph54\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9638\pard\intbl\sl240\slmult1\b\f0 POP\b0\f1\cell\row\pard\sl240\slmult1\f0\tab Description:\par
+\tab\tab Pop a word from the processor stack into destination register Rx.\par
+\f1\par
+\f0\tab Format:\par
+\tab\tab PUSH Rx\par
+\tab\tab  0x31\par
+\tab\tab [0100 0001] [0000 xxxx]\par
+\f1\par
+\f0\tab Operation:\par
+\tab\tab SP += 2\par
+\tab\tab Rx  = Memory[SP]\par
+\tab\tab PC += 2\par
+\f1\par
+\par
+\pard\sl240\slmult1\qc\b\f0 - BRANCHING -\par
+\pard\sl240\slmult1\b0\f1\par
+\trowd\trgaph54\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9638\pard\intbl\sl240\slmult1\b\f0 JMP\b0\f1\cell\row\pard\sl240\slmult1\f0\tab Description:\par
+\tab\tab Perform an unconditional absolute jump to immediate address.\par
+\f1\par
+\f0\tab Format:\par
+\tab\tab JMP IMM\par
+\tab\tab  0x40\par
+\tab\tab [0100 0000] [0000 0000] [iiii iiii] [iiii iiii]\par
+\f1\par
+\f0\tab Operation:\par
+\tab\tab PC = IMM\par
+\f1\par
+\par
+\trowd\trgaph54\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9638\pard\intbl\sl240\slmult1\b\f0 JNE\b0\f1\cell\row\pard\sl240\slmult1\f0\tab Description:\par
+\tab\tab Perform a conditional absolute jump to immediate address if registers Rx and Ry are not equal.\par
+\f1\par
+\f0\tab Format:\par
+\tab\tab JNE Ry Rx IMM\par
+\tab\tab  0x41\par
+\tab\tab [0100 0001] [yyyy xxxx] [iiii iiii] [iiii iiii]\par
+\f1\par
+\f0\tab Operation:\par
+\tab\tab If (Ry != Rx) Then\par
+\tab\tab\tab PC  = Imm\par
+\tab\tab else\par
+\tab\tab\tab PC += 4\par
+\f1\par
+\par
+\trowd\trgaph54\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9638\pard\intbl\sl240\slmult1\b\f0 JEQ\b0\f1\cell\row\pard\sl240\slmult1\f0\tab Description:\par
+\tab\tab Perform a conditional absolute jump to immediate address if registers Rx and Ry are equal.\par
+\f1\par
+\f0\tab Format:\par
+\tab\tab JNE Ry Rx IMM\par
+\tab\tab  0x42\par
+\tab\tab [0100 0010] [yyyy xxxx] [iiii iiii] [iiii iiii]\par
+\f1\par
+\f0\tab Operation:\par
+\tab\tab If (Ry == Rx) Then \par
+\tab\tab\tab PC  = Imm\par
+\tab\tab else \par
+\tab\tab\tab PC += 4\par
+\f1\par
+\par
+\trowd\trgaph54\trrh330\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9638\pard\intbl\sl240\slmult1\b\f0 JL\b0\f1\cell\row\pard\sl240\slmult1\f0\tab Description:\par
+\tab\tab Perform a absolute jump if Ry is less than Rx.\par
+\f1\par
+\f0\tab Format:\par
+\tab\tab JNE Ry Rx IMM\par
+\tab\tab  0x43\par
+\tab\tab [0100 0011] [yyyy xxxx] [iiii iiii] [iiii iiii]\par
+\f1\par
+\f0\tab Operation:\par
+\tab\tab If (Ry < Rx) Then\par
+\tab\tab\tab PC = Imm\par
+\tab\tab else\par
+\tab\tab\tab PC += 4\par
+\f1\par
+\par
+\trowd\trgaph54\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9638\pard\intbl\sl240\slmult1\b\f0 JG\b0\f1\cell\row\pard\sl240\slmult1\f0\tab Description:\par
+\tab\tab Perform a absolute jump if Ry is greater than Rx.\par
+\f1\par
+\f0\tab Format:\par
+\tab\tab JNE Ry Rx IMM\par
+\tab\tab  0x44\par
+\tab\tab [0100 0100] [yyyy xxxx] [iiii iiii] [iiii iiii]\par
+\f1\par
+\f0\tab Operation:\par
+\tab\tab If (Ry > Rx) Then\par
+\tab\tab\tab PC = Imm\par
+\tab\tab else\par
+\tab\tab\tab PC += 4\par
+\f1\par
+\par
+\trowd\trgaph54\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9638\pard\intbl\sl240\slmult1\b\f0 JLE\b0\f1\cell\row\pard\sl240\slmult1\f0\tab Description:\par
+\tab\tab Perform a absolute jump if Ry is less than or equal to Rx.\par
+\f1\par
+\f0\tab Format:\par
+\tab\tab JNE Ry Rx IMM\par
+\tab\tab  0x45\par
+\tab\tab [0100 0101] [yyyy xxxx] [iiii iiii] [iiii iiii]\par
+\f1\par
+\f0\tab Operation:\par
+\tab\tab If (Ry <= Rx) Then\par
+\tab\tab\tab PC = Imm\par
+\tab\tab else\par
+\tab\tab\tab PC += 4\par
+\f1\par
+\par
+\trowd\trgaph54\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9638\pard\intbl\sl240\slmult1\b\f0 JGE\b0\f1\cell\row\pard\sl240\slmult1\f0\tab Description:\par
+\tab\tab Perform a conditional absolute jump if register Ry is greater then or equal to Rx.\par
+\f1\par
+\f0\tab Format:\par
+\tab\tab JNE Ry Rx IMM\par
+\tab\tab  0x46\par
+\tab\tab [0100 0110] [yyyy xxxx] [iiii iiii] [iiii iiii]\par
+\f1\par
+\f0\tab Operation:\par
+\tab\tab If (Ry >= Rx) Then\par
+\tab\tab\tab PC = Imm\par
+\tab\tab else\par
+\tab\tab\tab PC += 4\par
+\f1\par
+\par
+\pard\sl240\slmult1\qc\b\f0 - SUBROUTINE AND INTERRUPTS -\par
+\pard\sl240\slmult1\b0\f1\par
+\trowd\trgaph54\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9638\pard\intbl\sl240\slmult1\b\f0 CALL\b0\f1\cell\row\pard\sl240\slmult1\f0\tab Description:\par
+\tab\tab Call a program subroutine.\par
+\f1\par
+\f0\tab Format:\par
+\tab\tab CALL Imm\par
+\tab\tab  0x50\par
+\tab\tab [0101 0000] [0000 0000] [iiii iiii] [iiii iiii]\par
+\f1\par
+\f0\tab Operation:\par
+\tab\tab SP -= 2\par
+\tab\tab Memory[sp] = PC + 4\par
+\tab\tab PC = IMM\par
+\f1\par
+\pard\sl240\slmult1\qc\b\f0\endash  ZERO OPERAND INSTRUCTIONS -\par
+\pard\sl240\slmult1\b0\f1\par
+\trowd\trgaph54\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9638\pard\intbl\sl240\slmult1\b\f0 RET\b0\f1\cell\row\pard\sl240\slmult1\f0\tab Description:\par
+\tab\tab Return from subroutine.\par
+\f1\par
+\f0\tab Format:\par
+\tab\tab RET\par
+\tab\tab  0x60\par
+\tab\tab [0110 0000] [0000 0000]\par
+\f1\par
+\f0\tab Operation:\par
+\tab\tab SP += 2\par
+\tab\tab PC  = Memory[SP]\par
+\f1\par
+\par
+\trowd\trgaph54\trrh1\trpaddl54\trpaddr54\trpaddfl3\trpaddfr3
+\clcfpat2\clcbpat3\clbrdrl\brdrw1\brdrs\brdrcf2\clbrdrt\brdrw1\brdrs\brdrcf2\clbrdrr\brdrw1\brdrs\brdrcf2\clbrdrb\brdrw1\brdrs\brdrcf2 \cellx9638\pard\intbl\sl240\slmult1\b\f0 BRK\b0\f1\cell\row\pard\sl240\slmult1\f0\tab Description:\par
+\tab\tab Execute the debug breakpoint interrupt. This instruction is equivalent in operation to INT 3.  The 3 in this case is implicit thus reducing this instructions size to a useful two bytes so that it can easily patch any other instruction.\par
+\f1\par
+\f0\tab Format:\par
+\tab\tab RET\par
+\tab\tab  0x61\par
+\tab\tab [0110 0001] [0000 0000]\par
+\f1\par
+\f0\tab Operation:\par
+\tab\tab Undefined\par
+\f1\par
+\pard\sl240\slmult1\qc\b\f0 - ASM16 Memory Map -\par
+\pard\sl240\slmult1\b0\f1\par
+\par
+\f0 0x0000    \\\par
+\tab\tab - General RAM\par
+0xfeff    /\par
+0xff00    \\\par
+\tab\tab - Interrupt vectors\par
+0xffff    /\par
+\f1\par
+\f0 0xfffe\tab - Reset vector\par
+}
+ 
