@@ -6,7 +6,7 @@
 
 #include "main.h"
 #include "console.h"
-#include "cpu16.h"
+#include "asm16.h"
 #include "ui.h"
 #include "dev_ppu.h"
 
@@ -26,26 +26,26 @@ bool app_init(state_t * state, app_state_t * app, const char * path) {
 
     state->running_ = false;
     state->console_ = con_new(con_width, con_height);
-    state->cpu_ = cpu16_new();
+    state->cpu_ = asm16_new();
     if (!state->cpu_)
         return false;
 
     memset(state->screen_.pixel_, 0x10, 320*240*4);
 
 #if 0
-    cpu16_device_t * serial = new cpu16_device_t;
+    asm16_device_t * serial = new asm16_device_t;
     assert (serial);
-    memset (serial, 0, sizeof (cpu16_device_t));
+    memset (serial, 0, sizeof (asm16_device_t));
     serial->cycles_till_preempt_ = 0xffff;
     serial->write_byte_ = serial_write_8;
-    cpu16_add_device(state->cpu_, serial, 32, 32);
+    asm16_add_device(state->cpu_, serial, 32, 32);
 #endif
 
-    if (!cpu16_load_image(state->cpu_, path)) {
+    if (!asm16_load_image(state->cpu_, path)) {
         printf("failed to load image\n");
         return false;
     }
-    cpu16_reset(state->cpu_);
+    asm16_reset(state->cpu_);
 
     dev_ppu_init(state);
 
@@ -65,7 +65,7 @@ bool app_init(state_t * state, app_state_t * app, const char * path) {
 void app_free(state_t * state, app_state_t * app) {
 
     if (state->cpu_)
-        cpu16_free(state->cpu_);
+        asm16_free(state->cpu_);
     state->cpu_ = nullptr;
 
     if (state->console_)
@@ -87,7 +87,7 @@ void draw_framebuffer(state_t * state) {
     const uint32_t height = state->screen_.height_;
     uint32_t * py = (uint32_t*)state->screen_.pixel_;
 
-    uint8_t * mem = cpu16_get_memory(state->cpu_);
+    uint8_t * mem = asm16_get_memory(state->cpu_);
     mem += 0x4000;
     py += ox + width * oy;
     for (uint32_t y = 0; y < 64; y++) {
@@ -117,7 +117,7 @@ void draw_state(state_t * state) {
 
 static
 void dbg_step_inst(state_t * state) {
-    cpu16_run(state->cpu_, 1);
+    asm16_run(state->cpu_, 1);
 }
 
 static
@@ -233,7 +233,7 @@ int main(int argc, const char ** args) {
 
         if (state.running_) {
             // insert all breakpoints (unless pc is on breakpoint)
-            cpu16_run(state.cpu_, ~0u);
+            asm16_run(state.cpu_, ~0u);
             // remove all breakpoints
         }
         else {

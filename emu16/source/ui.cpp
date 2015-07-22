@@ -5,7 +5,7 @@
 #include "ui.h"
 #include "main.h"
 #include "console.h"
-#include "cpu16.h"
+#include "asm16.h"
 #include "dasm.h"
 
 enum e_pane {
@@ -69,7 +69,7 @@ void ui_draw_reg(state_t * state, pane_t * pane) {
     uint32_t oh = pane->h_;
 
     console_t * con = state->console_;
-    cpu16_t   * cpu = state->cpu_;
+    asm16_t   * cpu = state->cpu_;
 
     static const char * reg[] = {
         "ZR",  "PC",  "SP",  "R3",
@@ -80,15 +80,15 @@ void ui_draw_reg(state_t * state, pane_t * pane) {
 
     con_set_caret(con, ox, oy);
     con_set_attr(con, 0x24);
-    con_puts(con, pane->name_, -1u);
+    con_puts(con, pane->name_, ~1u);
     con_set_attr(con, 0x52);
 
-    for (int i = 0; i < oh; ++i) {
+    for (uint32_t i = 0; i < oh; ++i) {
 
         con_set_caret(con, ox, oy + i + 1);
         con_puts(con, reg[i], 3);
         con_set_caret(con, ox + 5, -1);
-        write_word(con, cpu16_get_register(state->cpu_, i));
+        write_word(con, asm16_get_register(state->cpu_, i));
     }
 }
 
@@ -101,11 +101,11 @@ void ui_draw_mem(state_t * state, pane_t * pane) {
     const uint32_t height = pane->h_;
 
     console_t * con = state->console_;
-    cpu16_t   * cpu = state->cpu_;
+    asm16_t   * cpu = state->cpu_;
 
     con_set_caret(con, ox, oy);
     con_set_attr(con, 0x24);
-    con_puts(con, pane->name_, -1u);
+    con_puts(con, pane->name_, ~1u);
     con_set_attr(con, 0x52);
 
     uint16_t mem = 0;
@@ -116,13 +116,13 @@ void ui_draw_mem(state_t * state, pane_t * pane) {
         con_move(con, 2, 0);
 
         for (uint32_t x = 0; x < width; x++) {
-            uint8_t byte = cpu16_read_byte(cpu, mem + x);
+            uint8_t byte = asm16_read_byte(cpu, mem + x);
             write_byte(con, byte);
             con_move(con, 1, 0);
         }
         con_move(con, 1, 0);
         for (uint32_t x = 0; x < width; x++) {
-            uint8_t byte = cpu16_read_byte(cpu, mem + x);
+            uint8_t byte = asm16_read_byte(cpu, mem + x);
             con_putc(con, byte);
         }
         mem += width;
@@ -137,16 +137,16 @@ void ui_draw_dis(state_t * state, pane_t * pane) {
     const uint32_t height = pane->h_;
 
     console_t * con = state->console_;
-    cpu16_t   * cpu = state->cpu_;
-    uint8_t   * mem = cpu16_get_memory(cpu);
-    uint16_t    adr = cpu16_get_register(cpu, 1);
+    asm16_t   * cpu = state->cpu_;
+    uint8_t   * mem = asm16_get_memory(cpu);
+    uint16_t    adr = asm16_get_register(cpu, 1);
 
     con_set_caret(con, ox, oy);
     con_set_attr( con, 0x24 );
-    con_puts(con, pane->name_, -1u);
+    con_puts(con, pane->name_, ~1u);
     con_set_attr(con, 0x52);
 
-    for (int i = 0; i < height; ++i) {
+    for (uint32_t i = 0; i < height; ++i) {
 
         con_set_caret(con, ox, oy+i+1);
         write_word(con, adr);

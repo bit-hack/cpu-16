@@ -3,7 +3,7 @@
 #include <stdint.h>
 
 struct console_t;
-struct cpu16_t;
+struct asm16_t;
 
 struct screen_t {
 
@@ -17,6 +17,6 @@ struct state_t {
     bool running_;
 
     console_t * console_;
-    cpu16_t * cpu_;
+    asm16_t * cpu_;
     screen_t screen_;
 };
