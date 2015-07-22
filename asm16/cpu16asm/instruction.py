@@ -36,7 +36,7 @@ class Instruction(object):
         out = bytearray(2)
         out[0] = self.opcode_
         out[1] = (self.ry_ << 4) | self.rx_
-        if self.imm_:
+        if type(self.imm_) is int:
             out.append(self.imm_ & 0xff)
             out.append(self.imm_ >> 8)
         return out

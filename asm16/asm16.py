@@ -55,7 +55,7 @@ def emit_instruction(state, prototypes, operands):
             # parse a register
             if field == 'X' or field == 'Y':
                 val = read_register(state, operands[op_ix])
-                if val is None:
+                if not type(val) is int:
                     fail = True
                     break
                 if field == 'X':
@@ -73,7 +73,7 @@ def emit_instruction(state, prototypes, operands):
                     if len(imm) <= 1:
                         raise ParseException('malformed literal')
                     val = read_literal(state, operands[op_ix])
-                    if val is None:
+                    if not type(val) is int:
                         fail = True
                         break
                 # read symbolic offset
