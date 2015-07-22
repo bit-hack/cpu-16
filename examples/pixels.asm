@@ -25,18 +25,18 @@ function main
     mov     ZR    r5
 .loop
     - calculate x coordinate
-    mov     r5    r3
-    and     #3f   r3
-    shl     #2    r3
+    mov     r5    r7
+    and     #3f   r7
+    shl     #2    r7
     - calculate y coordinate
     mov     r5    r4
     shr     #6    r4
     shl     #2    r4 
     - multiply to make gradient
-    mov     r3    r6
+    mov     r7    r6
     mul     r4    r6
     shr     #8    r6
--   ldb     #0    r6    r6
+    ldb     #0    r6    r6
     - store in framebuffer
     stb+    r6    #4000 r5
     - wrap index
