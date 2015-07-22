@@ -12,4 +12,8 @@ namespace {
     static const uint32_t VIDEO_WIDTH  = 160;
     static const uint32_t VIDEO_HEIGHT = 120;
     static const uint32_t VIDEO_MAX_SPRITES = 32;
+
+    // interupts
+    static const uint32_t INT_VSYNC = 0;
+    static const uint32_t INT_HSYNC = 1;
 };

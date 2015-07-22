@@ -2,7 +2,6 @@
 #include <string.h>
 
 #include "console.h"
-#include "font.h"
 
 extern
 uint8_t * font_3x5_get(uint8_t ch);
@@ -221,11 +220,11 @@ void con_render(console_t *con, uint32_t * dst, uint32_t pitch, uint32_t height)
     uint32_t * py = dst;
 
     // vertical slots
-    for (int y=0; y<cheight; ++y, py+=pitch*fheight) {
+    for (uint32_t y=0; y<cheight; ++y, py+=pitch*fheight) {
         uint32_t * px = py;
 
         // horizontal chars
-        for (int x=0; x<cwidth; ++x, ++chr, ++att, px+=fwidth) {
+        for (uint32_t x = 0; x<cwidth; ++x, ++chr, ++att, px += fwidth) {
             uint32_t * pt = px;
 
             // lookup foreground and background colours
@@ -239,15 +238,12 @@ void con_render(console_t *con, uint32_t * dst, uint32_t pitch, uint32_t height)
             for (int i=0; i<fheight-1; ++i, pt+=pitch, fnt+=3) {
 
                 uint32_t f0 = fnt[0];
-                pt[0] = (((~f0) + 1) & fgnd) | ((f0-1) & bgnd);
                 pt[0] = ((~f0+1) & fgnd) | ((f0-1) & bgnd);
 
                 uint32_t f1 = fnt[1];
-                pt[1] = (((~f1) + 1) & fgnd) | ((f1-1) & bgnd);
                 pt[1] = ((~f1+1) & fgnd) | ((f1-1) & bgnd);
 
                 uint32_t f2 = fnt[2];
-                pt[2] = (((~f2) + 1) & fgnd) | ((f2-1) & bgnd);
                 pt[2] = ((~f2+1) & fgnd) | ((f2-1) & bgnd);
 
                 pt[3] = bgnd;

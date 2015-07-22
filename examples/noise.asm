@@ -29,11 +29,8 @@ function main
     shl     #1    r3
     or      r9    r3
     - store in framebuffer
-    mov     r5    r7
-    add     #4000 r7
-    stb     r3    r7
-    - increment and wrap i
-    add     #1    r5
+    stb+    r3    #4000 r5
+    - wrap index
     and     #0fff r5
     jmp     %loop
 end

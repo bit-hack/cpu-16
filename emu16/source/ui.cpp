@@ -30,11 +30,11 @@ extern void ui_draw_stk(state_t *, pane_t *);
 
 static
 pane_t pane_g[] = {
-    { "registers",      0, 0, 0, 0, ui_draw_reg },
-    { "memory",         0, 0, 0, 0, ui_draw_mem },
-    { "disassembly",    0, 0, 0, 0, ui_draw_dis },
-    { "stack",          0, 0, 0, 0, ui_draw_stk },
-    { nullptr,          0, 0, 0, 0, nullptr }
+    { "Registers",     26,  0, 0, 16, ui_draw_reg },
+    { "Memory",         0, 18, 8,  8, ui_draw_mem },
+    { "Disassembly",    0,  0, 0, 16, ui_draw_dis },
+    { "Stack",          0,  0, 0,  0, ui_draw_stk },
+    { nullptr,          0,  0, 0,  0, nullptr }
 };
 
 static
@@ -64,25 +64,26 @@ void write_byte(console_t * con, uint8_t b) {
 void ui_draw_reg(state_t * state, pane_t * pane) {
     assert(state);
 
-    uint32_t ox = 24;
-    uint32_t oy = 0;
+    uint32_t ox = pane->x_;
+    uint32_t oy = pane->y_;
+    uint32_t oh = pane->h_;
 
     console_t * con = state->console_;
     cpu16_t   * cpu = state->cpu_;
 
     static const char * reg[] = {
-        "ZR", "PC", "SP", "R3",
-        "R4", "R5", "R6", "R7",
-        "R8", "R9", "R10", "R11",
+        "ZR",  "PC",  "SP",  "R3",
+        "R4",  "R5",  "R6",  "R7",
+        "R8",  "R9",  "R10", "R11",
         "R12", "R13", "R14", "R15",
     };
 
     con_set_caret(con, ox, oy);
     con_set_attr(con, 0x24);
-    con_puts(con, "registers", 9);
+    con_puts(con, pane->name_, -1u);
     con_set_attr(con, 0x52);
 
-    for (int i = 0; i < 16; ++i) {
+    for (int i = 0; i < oh; ++i) {
 
         con_set_caret(con, ox, oy + i + 1);
         con_puts(con, reg[i], 3);
@@ -94,17 +95,17 @@ void ui_draw_reg(state_t * state, pane_t * pane) {
 void ui_draw_mem(state_t * state, pane_t * pane) {
     assert(state);
 
-    const uint32_t ox     = 0;
-    const uint32_t oy     = 18;
-    const uint32_t width  = 8;
-    const uint32_t height = 8;
+    const uint32_t ox     = pane->x_;
+    const uint32_t oy     = pane->y_;
+    const uint32_t width  = pane->w_;
+    const uint32_t height = pane->h_;
 
     console_t * con = state->console_;
     cpu16_t   * cpu = state->cpu_;
 
     con_set_caret(con, ox, oy);
     con_set_attr(con, 0x24);
-    con_puts(con, "memory", 6);
+    con_puts(con, pane->name_, -1u);
     con_set_attr(con, 0x52);
 
     uint16_t mem = 0;
@@ -131,9 +132,9 @@ void ui_draw_mem(state_t * state, pane_t * pane) {
 void ui_draw_dis(state_t * state, pane_t * pane) {
     assert(state);
 
-    const uint32_t ox     = 0;
-    const uint32_t oy     = 0;
-    const uint32_t height = 16;
+    const uint32_t ox     = pane->x_;
+    const uint32_t oy     = pane->y_;
+    const uint32_t height = pane->h_;
 
     console_t * con = state->console_;
     cpu16_t   * cpu = state->cpu_;
@@ -142,7 +143,7 @@ void ui_draw_dis(state_t * state, pane_t * pane) {
 
     con_set_caret(con, ox, oy);
     con_set_attr( con, 0x24 );
-    con_puts(con, "disassembly", 11);
+    con_puts(con, pane->name_, -1u);
     con_set_attr(con, 0x52);
 
     for (int i = 0; i < height; ++i) {

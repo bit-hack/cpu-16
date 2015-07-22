@@ -1,5 +1,4 @@
 #include <stdint.h>
-#include <stdio.h>
 #include <assert.h>
 
 #define _SDL_main_h
@@ -9,6 +8,7 @@
 #include "console.h"
 #include "cpu16.h"
 #include "ui.h"
+#include "dev_ppu.h"
 
 const uint32_t con_width  = 40;
 const uint32_t con_height = 28;
@@ -47,6 +47,8 @@ bool app_init(state_t * state, app_state_t * app, const char * path) {
     }
     cpu16_reset(state->cpu_);
 
+    dev_ppu_init(state);
+
     uint32_t flags = 0;
 #if 0
     flags |= SDL_FULLSCREEN;
@@ -75,18 +77,6 @@ void app_free(state_t * state, app_state_t * app) {
     SDL_Quit();
 }
 
-static inline
-void plot(uint32_t * pixels, int x, int y, uint32_t f, int fgnd, int bgnd, uint32_t pitch) {
-    uint32_t c = (((~f) + 1) & fgnd) | ((f-1) & bgnd);
-//    uint32_t c = (~f) + 1;
-    x <<= 1;
-    y <<= 1;
-    pixels[x   + y * pitch        ] = c;
-    pixels[x+1 + y * pitch        ] = c;
-    pixels[x   + y * pitch + pitch] = c;
-    pixels[x+1 + y * pitch + pitch] = c;
-}
-
 static
 void draw_framebuffer(state_t * state) {
 
@@ -113,17 +103,11 @@ void draw_framebuffer(state_t * state) {
 
 static
 void draw_state(state_t * state) {
-
     console_t * con = state->console_;
-    cpu16_t   * cpu = state->cpu_;
-
     con_fill(con, nullptr, ' ');
-
     // draw ui elements to the console
     ui_draw(state);
-
     draw_framebuffer(state);
-
     // draw console to the screen
     con_render(con,
                state->screen_.pixel_,
@@ -249,7 +233,7 @@ int main(int argc, const char ** args) {
 
         if (state.running_) {
             // insert all breakpoints (unless pc is on breakpoint)
-            cpu16_run(state.cpu_, 1024);
+            cpu16_run(state.cpu_, ~0u);
             // remove all breakpoints
         }
         else {

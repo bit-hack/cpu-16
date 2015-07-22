@@ -9,19 +9,24 @@
 
 struct cpu16_t;
 
-struct cpu16_device_t {
+struct cpu16_bus_map_t {
 
-    uint32_t cycles_till_preempt_;
-
-    typedef uint16_t (*read_word_t )(cpu16_t *, uint16_t addr, cpu16_device_t * device);
-    typedef uint8_t  (*read_byte_t )(cpu16_t *, uint16_t addr, cpu16_device_t * device);
+    typedef uint16_t (*read_word_t )(cpu16_t *, uint16_t addr, cpu16_bus_map_t * map);
+    typedef uint8_t  (*read_byte_t )(cpu16_t *, uint16_t addr, cpu16_bus_map_t * map);
     read_word_t  read_word_;
     read_byte_t  read_byte_;
 
-    typedef void (*write_word_t)(cpu16_t *, uint16_t addr, uint16_t val, cpu16_device_t * device);
-    typedef void (*write_byte_t)(cpu16_t *, uint16_t addr, uint8_t  val, cpu16_device_t * device);
+    typedef void (*write_word_t)(cpu16_t *, uint16_t addr, uint16_t val, cpu16_bus_map_t * map);
+    typedef void (*write_byte_t)(cpu16_t *, uint16_t addr, uint8_t  val, cpu16_bus_map_t * map);
     write_word_t write_word_;
     write_byte_t write_byte_;
+
+    void * user_;
+};
+
+struct cpu16_device_t {
+
+    uint32_t cycles_till_preempt_;
 
     typedef void (*init_t)(cpu16_t *, cpu16_device_t * device);
     init_t init_;
@@ -52,13 +57,18 @@ bool cpu16_load_image(cpu16_t * cpu, const char * path);
 extern
 void cpu16_reset(cpu16_t * cpu);
 
-// add a device to the bus
+// add a device to the cpu
 extern
 void cpu16_add_device(
     cpu16_t * cpu,
-    cpu16_device_t * device,
-    uint16_t page_start,
-    uint16_t page_end);
+    cpu16_device_t * device);
+
+// add a memory page controller
+extern
+void cpu16_map_bus(
+    cpu16_t * cpu,
+    cpu16_bus_map_t * ctrl,
+    uint16_t page);
 
 // read a byte from CPU16 memory
 extern
@@ -81,4 +91,13 @@ extern
 bool cpu16_remove_breakpoint(cpu16_t *cpu, uint16_t addr);
 
 //
+extern
 bool cpu16_patch(cpu16_t * cpu, uint8_t * in, uint32_t in_len, uint8_t * out, uint32_t * out_len);
+
+//
+extern
+void cpu16_yield(cpu16_t *cpu);
+
+//
+extern
+void cpu16_interrupt(cpu16_t *cpu, uint8_t num);

@@ -3,28 +3,6 @@
 
 #include "dasm.h"
 
-/*
-| 0xCC | 0x0_           | 0x1_      | 0x2_       | 0x3_    | 0x4_          | 0x5_     | 0x6_ |
-| ---- | -------------- | --------- | ---------- | ------- | ------------- | -------- | ---- |
-| 0x_0 | LDW  IMM RY RX | ADD RY RX | ADD IMM RX | PUSH RX | JMP       IMM | CALL IMM | RETI |
-| 0x_1 | LDB  IMM RY RX | MUL RY RX | MUL IMM RX | POP  RX | JNE RY RX IMM | INT  IMM | ENI  |
-| 0x_2 | LDW+ IMM RY RX | SHL RY RX | SHL IMM RX |         | JEQ RY RX IMM |          | DAI  |
-| 0x_3 | LDB+ IMM RY RX | SHR RY RX | SHR IMM RX |         | JL  RY RX IMM |          | RET  |
-| 0x_4 | STW  IMM RY RX | SUB RY RX | SUB IMM RX |         | JG  RY RX IMM |          | BRK  |
-| 0x_5 | STB  IMM RY RX | DIV RY RX | DIV IMM RX |         | JLE RY RX IMM |          |      |
-| 0x_6 | STW+ IMM RY RX | MOD RY RX | MOD IMM RX |         | JGE RY RX IMM |          |      |
-| 0x_7 | STB+ IMM RY RX | AND RY RX | AND IMM RX |         |               |          |      |
-| 0x_8 |                | OR  RY RX | OR  IMM RX |         |               |          |      |
-| 0x_9 |                | XOR RY RX | XOR IMM RX |         |               |          |      |
-| 0x_A |                | MOV RY RX | MOV IMM RX |         |               |          |      |
-| 0x_B |                | MLH RY RX | MLH IMM RX |         |               |          |      |
-
-    LDW: RX = memory[(IMM + RY) & 0xffff]
-
-    JEQ: if (RY == RX) PC = IMM
-
-*/
-
 struct format_t {
 
     const char * mnemonic_;
@@ -32,36 +10,52 @@ struct format_t {
 };
 
 uint8_t size[] = {
-    2, 2, 2, 2,  2, 2, 2, 2,  0, 0, 0, 0,  0, 0, 0, 0,
-    4, 4, 0, 0,  4, 4, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
-    2, 2, 2, 2,  2, 2, 2, 2,  2, 2, 2, 2,  0, 0, 0, 0,
-    4, 4, 4, 4,  4, 4, 4, 4,  4, 4, 4, 4,  0, 0, 0, 0,
-    2, 2, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
-    4, 4, 4, 4,  4, 4, 4, 4,  0, 0, 0, 0,  0, 0, 0, 0,
-    4, 4, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
-    2, 2, 2, 2,  2, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+    4, 4, 4, 4, 
+    4, 4, 4, 4,  
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+
+    2, 2, 2, 2, 
+    2, 2, 2, 2,  
+    2, 2, 2, 2, 
+    0, 0, 0, 0,
+
+    4, 4, 4, 4, 
+    4, 4, 4, 4,  
+    4, 4, 4, 4, 
+    0, 0, 0, 0,
+
+    2, 2, 0, 0, 
+    0, 0, 0, 0,  
+    0, 0, 0, 0, 
+    0, 0, 0, 0,
+
+    4, 4, 4, 4, 
+    4, 4, 4, 4, 
+    0, 0, 0, 0,  
+    0, 0, 0, 0,
+
+    2, 2, 0, 0,  
+    0, 0, 0, 0, 
+    0, 0, 0, 0,  
+    0, 0, 0, 0,
 };
 
 format_t format[] = {
 
-    { "LDW ", "YX"     },   { "LDB ", "YX"     },   { "LDW+", "YX"     },   { "LDB+", "YX"     },
-    { "STW ", "YX"     },   { "STB ", "YX"     },   { "STW+", "YX"     },   { "STB+", "YX"     },
+    { "LDW ", "IYX"    },   { "LDB ", "IYX"    },   { "LDW+", "IYX"    },   { "LDB+", "IYX"    },
+    { "STW ", "YIX"    },   { "STB ", "YIX"    },   { "STW+", "YIX"    },   { "STB+", "YIX"    },
     { nullptr, nullptr },   { nullptr, nullptr },   { nullptr, nullptr },   { nullptr, nullptr },   
     { nullptr, nullptr },   { nullptr, nullptr },   { nullptr, nullptr },   { nullptr, nullptr },
 
-    { "LDW ", "IX"     },   { "LDB ", "IX"     },   { nullptr, nullptr },   { nullptr, nullptr },
-    { "STW ", "XI"     },   { "STB ", "XI"     },   { nullptr, nullptr },   { nullptr, nullptr },
-    { nullptr, nullptr },   { nullptr, nullptr },   { nullptr, nullptr },   { nullptr, nullptr },
+    { "ADD ", "YX"     },   { "SUB ", "YX"     },   { "MUL ", "YX"     },   { "MLH ", "YX"     },
+    { "DIV ", "YX"     },   { "MOD ", "YX"     },   { "SHL ", "YX"     },   { "SHR ", "YX"     },
+    { "AND ", "YX"     },   { "OR  ", "YX"     },   { "XOR ", "YX"     },   { "MOV ", "YX"     },
     { nullptr, nullptr },   { nullptr, nullptr },   { nullptr, nullptr },   { nullptr, nullptr },
 
-    { "ADD ", "YX"     },   { "MUL ", "YX"     },   { "SHL ", "YX"     },   { "SHR ", "YX"     },
-    { "SUB ", "YX"     },   { "DIV ", "YX"     },   { "MOD ", "YX"     },   { "AND ", "YX"     },
-    { "OR  ", "YX"     },   { "XOR ", "YX"     },   { "MOV ", "YX"     },   { "MLH ", "YX"     },
-    { nullptr, nullptr },   { nullptr, nullptr },   { nullptr, nullptr },   { nullptr, nullptr },
-    
-    { "ADD ", "IX"     },   { "MUL ", "IX"     },   { "SHL ", "IX"     },   { "SHR ", "IX"     },
-    { "SUB ", "IX"     },   { "DIV ", "IX"     },   { "MOD ", "IX"     },   { "AND ", "IX"     },
-    { "OR  ", "IX"     },   { "XOR ", "IX"     },   { "MOV ", "IX"     },   { "MLH ", "IX"     },
+    { "ADD ", "IX"     },   { "SUB ", "IX"     },   { "MUL ", "IX"     },   { "MLH ", "IX"     },
+    { "DIV ", "IX"     },   { "MOD ", "IX"     },   { "SHL ", "IX"     },   { "SHR ", "IX"     },
+    { "AND ", "IX"     },   { "OR  ", "IX"     },   { "XOR ", "IX"     },   { "MOV ", "IX"     },
     { nullptr, nullptr },   { nullptr, nullptr },   { nullptr, nullptr },   { nullptr, nullptr },
     
     { "PUSH", "X"      },   { "POP ", "X"      },   { nullptr, nullptr },   { nullptr, nullptr },
@@ -70,17 +64,12 @@ format_t format[] = {
     { nullptr, nullptr },   { nullptr, nullptr },   { nullptr, nullptr },   { nullptr, nullptr },
 
     { "JMP ", "I"      },   { "JNE ", "YXI"    },   { "JEQ ", "YXI"    },   { "JL  ", "YXI"    },
-    { "JG  ", "YXI"    },   { "JLE ", "YXI"    },   { "JGE ", "YXI"    },   { nullptr, nullptr },
+    { "JG  ", "YXI"    },   { "JLE ", "YXI"    },   { "JGE ", "YXI"    },   { "CALL", "I"      },
     { nullptr, nullptr },   { nullptr, nullptr },   { nullptr, nullptr },   { nullptr, nullptr },
     { nullptr, nullptr },   { nullptr, nullptr },   { nullptr, nullptr },   { nullptr, nullptr },
     
-    { "CALL", "I"      },   { "INT ", "I"      },   { nullptr, nullptr },   { nullptr, nullptr },
+    { "RET ", ""       },   { "BRK ", ""       },   { nullptr, nullptr },   { nullptr, nullptr },
     { nullptr, nullptr },   { nullptr, nullptr },   { nullptr, nullptr },   { nullptr, nullptr },
-    { nullptr, nullptr },   { nullptr, nullptr },   { nullptr, nullptr },   { nullptr, nullptr },
-    { nullptr, nullptr },   { nullptr, nullptr },   { nullptr, nullptr },   { nullptr, nullptr },
-    
-    { "RETI", ""       },   { "CLI ", ""       },   { "STI ", ""       },   { "RET ", ""       },
-    { "BRK ", ""       },   { nullptr, nullptr },   { nullptr, nullptr },   { nullptr, nullptr },
     { nullptr, nullptr },   { nullptr, nullptr },   { nullptr, nullptr },   { nullptr, nullptr },
     { nullptr, nullptr },   { nullptr, nullptr },   { nullptr, nullptr },   { nullptr, nullptr },
 };
@@ -138,6 +127,9 @@ void decode_reg(uint8_t * out, uint8_t num) {
     case (2) :
         memcpy(out, "SP", 3);
         break;
+    case (3) :
+        memcpy(out, "CR", 3);
+        break;
     default:
         out[0] = 'R';
         put_dec(out+1, num);
@@ -145,7 +137,7 @@ void decode_reg(uint8_t * out, uint8_t num) {
 }
 
 uint32_t dasm_length(uint8_t * stream) {
-    if (*stream >= 0x80)
+    if (*stream >= 0x60)
         return 0;
     return size[*stream];
 }
@@ -154,7 +146,7 @@ bool dasm_decode(uint8_t * stream, dasm_inst_t * out) {
 
     uint8_t op = stream[0];
 
-    if (op >= 0x80)
+    if (op >= 0x60)
         return false;
     const format_t & fmt = format[op];
     if (!fmt.mnemonic_)

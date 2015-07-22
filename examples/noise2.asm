@@ -7,32 +7,32 @@ DATA #ffff
 at #20
 function rand
     - load seed
-    ldw     %seed r3
+    ldw     %seed zr r10
     - bit 11
-    mov     r3    r4
+    mov     r10   r4
     shr     #A    r4
     and     #1    r4
     mov     r4    r9
     - bit 13
-    mov     r3    r4
+    mov     r10   r4
     shr     #C    r4
     and     #1    r4
     xor     r4    r9
     - bit 14
-    mov     r3    r4
+    mov     r10   r4
     shr     #D    r4
     and     #1    r4
     xor     r4    r9
     - bit 16
-    mov     r3    r4
+    mov     r10   r4
     shr     #F    r4
     and     #1    r4
     xor     r4    r9
     - add to input
-    shl     #1    r3
-    or      r9    r3
+    shl     #1    r10
+    or      r9    r10
     - store seed
-    stw     r3 %seed
+    stw     r10 %seed zr
     - return
     ret
 end
@@ -43,18 +43,24 @@ function main
     mov     ZR    r5
     - setup stack
     mov     #a000 SP
+    - enable interrupts
+-    or      #0001 CR
 .loop
-    - get a random number in r3
+    - get a random number in r10
     call %rand
     - store in framebuffer
-    mov     r5    r7
-    add     #4000 r7
-    stb     r3    r7
-    - increment and wrap i
-    add     #1    r5
+    stb+    r10   #4000 r5
     and     #0fff r5
     jmp     %loop
 end
+
+at #ffe0
+-- vblank
+ret
+nop
+-- hblank
+ret
+nop
 
 at #fffc
 jmp %main

@@ -36,13 +36,10 @@ function main
     mov     r3    r6
     mul     r4    r6
     shr     #8    r6
--   ldb     r6    r6
+-   ldb     #0    r6    r6
     - store in framebuffer
-    mov     r5    r7
-    add     #4000 r7
-    stb     r6    r7
-    - increment and wrap i
-    add     #1    r5
+    stb+    r6    #4000 r5
+    - wrap index
     and     #0fff r5
     jmp     %loop
 end

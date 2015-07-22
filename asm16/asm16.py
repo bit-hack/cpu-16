@@ -13,14 +13,14 @@ class State(object):
     def next_line(self):
         self.line_ += 1
 
-def read_literal(state, value):
+def read_literal(_, value):
     assert type(value) is str
     assert len(value) > 1
     if value[0] == '#':
         return int(value[1:], 16)
     return None
 
-def read_register(state, value):
+def read_register(_, value):
     assert type(value) is str
     assert len(value) > 1
     if value == 'ZR':
@@ -29,8 +29,12 @@ def read_register(state, value):
         return 1
     if value == 'SP':
         return 2
+    if value == 'CR':
+        return 3
     if value[0] == 'R':
-        return int(value[1:])
+        rval = int(value[1:])
+        if rval > 3:
+            return int(value[1:])
     return None
 
 def emit_instruction(state, prototypes, operands):
@@ -98,67 +102,68 @@ def emit_instruction(state, prototypes, operands):
     # failed to match
     raise ParseException('invalid instruction operands')
 
-map_LOAD = {
-    'LDW':  {('YX', '\x00'), ('IX', '\x10')},
-    'LDB':  {('YX', '\x01'), ('IX', '\x11')},
-    'LDW+': {('YX', '\x02')},
-    'LDB+': {('YX', '\x03')},
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- MEMORY ACCESS INSTRUCTIONS
+
+map_MEM = {
+    'LDW':  {('IYX', '\x00')},
+    'LDB':  {('IYX', '\x01')},
+    'LDW+': {('IYX', '\x02')},
+    'LDB+': {('IYX', '\x03')},
+
+    'STW':  {('YIX', '\x04')},
+    'STB':  {('YIX', '\x05')},
+    'STW+': {('YIX', '\x06')},
+    'STB+': {('YIX', '\x07')},
     }
 
-map_STORE = {
-    'STW':  {('YX', '\x04'), ('XI', '\x14')},
-    'STB':  {('YX', '\x05'), ('XI', '\x15')},
-    'STW+': {('YX', '\x06')},
-    'STB+': {('YX', '\x07')},
-    }
+def handle_MEM(state, operands):
+    assert operands[0] in map_MEM
+    emit_instruction(state, map_MEM[operands[0]], operands[1:])
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ALU INSTRUCTIONS
 
 map_ALU = {
-    'ADD':  {('YX', '\x20'), ('IX', '\x30')},
-    'MUL':  {('YX', '\x21'), ('IX', '\x31')},
-    'SHL':  {('YX', '\x22'), ('IX', '\x32')},
-    'SHR':  {('YX', '\x23'), ('IX', '\x33')},
-    'SUB':  {('YX', '\x24'), ('IX', '\x34')},
-    'DIV':  {('YX', '\x25'), ('IX', '\x35')},
-    'MOD':  {('YX', '\x26'), ('IX', '\x36')},
-    'AND':  {('YX', '\x27'), ('IX', '\x37')},
-    'OR':   {('YX', '\x28'), ('IX', '\x38')},
-    'XOR':  {('YX', '\x29'), ('IX', '\x39')},
-    'MOV':  {('YX', '\x2A'), ('IX', '\x3A')},
-    'MLH':  {('YX', '\x2B'), ('IX', '\x3B')},
+    'ADD':  {('YX', '\x10'), ('IX', '\x20')},
+    'SUB':  {('YX', '\x11'), ('IX', '\x21')},
+    'MUL':  {('YX', '\x12'), ('IX', '\x22')},
+    'MLH':  {('YX', '\x13'), ('IX', '\x23')},
+    'DIV':  {('YX', '\x14'), ('IX', '\x24')},
+    'MOD':  {('YX', '\x15'), ('IX', '\x25')},
+    'SHL':  {('YX', '\x16'), ('IX', '\x26')},
+    'SHR':  {('YX', '\x17'), ('IX', '\x27')},
+    'AND':  {('YX', '\x18'), ('IX', '\x28')},
+    'OR':   {('YX', '\x19'), ('IX', '\x29')},
+    'XOR':  {('YX', '\x1a'), ('IX', '\x2a')},
+    'MOV':  {('YX', '\x1b'), ('IX', '\x2b')},
     }
-
-map_JMP_COND = {
-    'JNE': {('YXI', '\x51')},
-    'JEQ': {('YXI', '\x52')},
-    'JL':  {('YXI', '\x53')},
-    'JG':  {('YXI', '\x54')},
-    'JLE': {('YXI', '\x55')},
-    'JGE': {('YXI', '\x56')},
-    }
-
-def handle_LOAD(state, operands):
-    assert operands[0] in map_LOAD
-    emit_instruction(state, map_LOAD[operands[0]], operands[1:])
-
-
-def handle_STORE(state, operands):
-    assert operands[0] in map_STORE
-    emit_instruction(state, map_STORE[operands[0]], operands[1:])
 
 def handle_ALU(state, operands):
     assert operands[0] in map_ALU
     emit_instruction(state, map_ALU[operands[0]], operands[1:])
 
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- SINGLE OPERAND INSTRUCTIONS
+
 def handle_PUSH(state, operands):
-    proto = {('X', '\x40')}
+    proto = {('X', '\x30')}
     emit_instruction(state, proto, operands[1:])
 
 def handle_POP(state, operands):
-    proto = {('X', '\x41')}
+    proto = {('X', '\x31')}
     emit_instruction(state, proto, operands[1:])
 
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- BRANCHING
+
+map_JMP_COND = {
+    'JNE': {('YXI', '\x41')},
+    'JEQ': {('YXI', '\x42')},
+    'JL':  {('YXI', '\x43')},
+    'JG':  {('YXI', '\x44')},
+    'JLE': {('YXI', '\x45')},
+    'JGE': {('YXI', '\x46')},
+    }
+
 def handle_JMP(state, operands):
-    proto = {('I', '\x50')}
+    proto = {('I', '\x40')}
     emit_instruction(state, proto, operands[1:])
 
 def handle_JMP_COND(state, operands):
@@ -166,35 +171,23 @@ def handle_JMP_COND(state, operands):
     emit_instruction(state, map_JMP_COND[operands[0]], operands[1:])
 
 def handle_CALL(state, operands):
-    proto = {('I', '\x60')}
+    proto = {('I', '\x47')}
     emit_instruction(state, proto, operands[1:])
 
-def handle_INT(state, operands):
-    proto = {('I', '\x61')}
-    emit_instruction(state, proto, operands[1:])
-
-def handle_RETI(state, operands):
-    proto = {('', '\x70')}
-    emit_instruction(state, proto, operands[1:])
-
-def handle_CLI(state, operands):
-    proto = {('', '\x71')}
-    emit_instruction(state, proto, operands[1:])
-
-def handle_STI(state, operands):
-    proto = {('', '\x72')}
-    emit_instruction(state, proto, operands[1:])
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ZERO OPERAND INSTRUCTIONS
 
 def handle_RET(state, operands):
-    proto = {('', '\x73')}
+    proto = {('', '\x50')}
     emit_instruction(state, proto, operands[1:])
 
 def handle_BRK(state, operands):
-    proto = {('', '\x74')}
+    proto = {('', '\x51')}
     emit_instruction(state, proto, operands[1:])
-    
-def handle_NOP(state, operands):
-    handle_ALU(state, ['MOV', 'R0', 'R0'])
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- PSEUDO INSTRUCTIONS
+
+def handle_NOP(state, _):
+    handle_ALU(state, ['MOV', 'ZR', 'ZR'])
 
 def handle_NOT(state, operands):
     if len(operands) < 2:
@@ -209,12 +202,14 @@ def handle_SWAP(state, operands):
     handle_ALU(state, ['XOR', ry, rx])
     handle_ALU(state, ['XOR', rx, ry])
 
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ASSEMBLY DIRECTIVES
+
 def handle_FUNCTION(state, operands):
     state.scope_.add_symbol(operands[1], state.image_.get_head(), state.line_)
     state.scope_.enter()
     pass
 
-def handle_END(state, operands):
+def handle_END(state, _):
     state.scope_.leave()
     pass
 
@@ -257,28 +252,30 @@ def handle_AT(state, operands):
     assert state.image_
     state.image_.set_head(val)
 
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- BASE INSTRUCTION MAP
+
 g_map = {
-    'LDW':      handle_LOAD,
-    'LDB':      handle_LOAD,
-    'LDW+':     handle_LOAD,
-    'LDB+':     handle_LOAD,
-    'STW':      handle_STORE,
-    'STB':      handle_STORE,
-    'STW+':     handle_STORE,
-    'STB+':     handle_STORE,
+    'LDW':      handle_MEM,
+    'LDB':      handle_MEM,
+    'LDW+':     handle_MEM,
+    'LDB+':     handle_MEM,
+    'STW':      handle_MEM,
+    'STB':      handle_MEM,
+    'STW+':     handle_MEM,
+    'STB+':     handle_MEM,
 
     'ADD':      handle_ALU,
-    'MUL':      handle_ALU,
-    'SHL':      handle_ALU,
-    'SHR':      handle_ALU,
     'SUB':      handle_ALU,
+    'MUL':      handle_ALU,
+    'MLH':      handle_ALU,
     'DIV':      handle_ALU,
     'MOD':      handle_ALU,
+    'SHL':      handle_ALU,
+    'SHR':      handle_ALU,
     'AND':      handle_ALU,
     'OR':       handle_ALU,
     'XOR':      handle_ALU,
     'MOV':      handle_ALU,
-    'MLH':      handle_ALU,
 
     'PUSH':     handle_PUSH,
     'POP':      handle_POP,
@@ -290,18 +287,14 @@ g_map = {
     'JG':       handle_JMP_COND,
     'JLE':      handle_JMP_COND,
     'JGE':      handle_JMP_COND,
-
     'CALL':     handle_CALL,
-    'RETI':     handle_RETI,
 
-    'CLI':      handle_CLI,
-    'STI':      handle_STI,
+    'RET':      handle_RET,
+    'BRK':      handle_BRK,
 
     'NOP':      handle_NOP,
     'NOT':      handle_NOT,
     'SWAP':     handle_SWAP,
-    'RET':      handle_RET,
-    'BRK':      handle_BRK,
 
     'FUNCTION': handle_FUNCTION,
     'END':      handle_END,

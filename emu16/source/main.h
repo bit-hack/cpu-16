@@ -1,6 +1,7 @@
 #pragma once
 
-struct SDL_Surface;
+#include <stdint.h>
+
 struct console_t;
 struct cpu16_t;
 
